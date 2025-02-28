@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { Fetch } from "./scripts/fetch";
 import { Song } from "./scripts/song";
+import { Vibrant } from "node-vibrant/browser";
 
 const apikey = import.meta.env.VITE_LASTFM_API_KEY;
 const user = "Drag0nEye";
@@ -26,9 +27,21 @@ const getCurrentSong = async () => {
                 let song = recentTracks.track[0];
                 let title = song.name;
                 let artist = song.artist["#text"];
-                let cover = song.image[2]["#text"];
+                let cover = song.image[3]["#text"];
 
                 currentSong.value = new Song(title, artist, cover);
+
+                Vibrant.from(cover)
+                    .getPalette()
+                    .then((palette) => {
+                        console.log(palette);
+
+                        let vibrant = palette.Vibrant?.rgb;
+
+                        if (vibrant) {
+                            document.body.style.backgroundColor = `rgb(${vibrant[0]}, ${vibrant[1]}, ${vibrant[2]})`;
+                        }
+                    });
             }
         })
         .catch((error) => {
