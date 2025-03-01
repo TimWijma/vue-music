@@ -29,8 +29,9 @@ const getCurrentSong = async () => {
                 let title = song.name;
                 let artist = song.artist["#text"];
                 let cover = song.image[3]["#text"];
+                let url = song.url;
 
-                currentSong.value = new Song(title, artist, cover);
+                currentSong.value = new Song(title, artist, cover, url);
 
                 let colors = await calculateBackgroundColor(cover);
 

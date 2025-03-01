@@ -1,68 +1,33 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { Song } from "../scripts/song";
+import { Marquee } from "../scripts/marquee";
 
 const props = defineProps<{
     currentSong: Song;
 }>();
 
 let reloaded = ref(false);
-let isAnimating = ref(false);
 
-const getTitleWidth = () => {
-    let originalElement = document.querySelector(".song-title") as HTMLElement;
-    let cloneElement = originalElement.cloneNode(true) as HTMLElement;
-    cloneElement.style.visibility = "hidden";
-    cloneElement.style.position = "absolute";
-    cloneElement.style.width = "auto";
-    cloneElement.style.whiteSpace = "nowrap";
+let titleMarquee: Marquee;
+let artistMarquee: Marquee;
 
-    document.body.appendChild(cloneElement);
-    let width = cloneElement.offsetWidth;
-    document.body.removeChild(cloneElement);
-
-    return width;
+const openLink = () => {
+    window.open(props.currentSong.url, "_blank");
 };
 
-const checkTitleLength = () => {
-    if (isAnimating.value) return;
-
-    let titleWidth = getTitleWidth();
-    let title = document.querySelector(".song-title") as HTMLElement;
-    let info = document.querySelector(".song-info") as HTMLElement;
-
-    if (titleWidth > info.offsetWidth) {
-        isAnimating.value = true;
-        const gap = " - ";
-        title.innerHTML = props.currentSong.title + gap;
-        const gapWidth = getTitleWidth();
-        title.innerHTML =
-            props.currentSong.title + gap + props.currentSong.title;
-
-        title.style.setProperty("--scroll-width", `-${gapWidth + 8}px`);
-
-        const duration = titleWidth / 150;
-        title.style.animation = `scroll ${duration}s linear`;
-
-        title.addEventListener(
-            "animationend",
-            () => {
-                stopTitleScroll();
-            },
-            { once: true }
-        );
-    } else {
-        title.innerHTML = props.currentSong.title;
-        title.style.animation = "none";
-    }
-};
-
-const stopTitleScroll = () => {
-    let title = document.querySelector(".song-title") as HTMLElement;
-    title.innerHTML = props.currentSong.title;
-    title.style.animation = "none";
-    isAnimating.value = false;
-};
+onMounted(() => {
+    titleMarquee = new Marquee(
+        ".song-title",
+        ".song-info",
+        props.currentSong.title
+    );
+    artistMarquee = new Marquee(
+        ".song-artist",
+        ".song-info",
+        props.currentSong.artist
+    );
+});
 </script>
 
 <template>
@@ -71,10 +36,10 @@ const stopTitleScroll = () => {
 
         <div class="song-info">
             <span class="song-alt">Currently playing</span>
-            <span class="song-title" @mouseover="checkTitleLength">
+            <span class="song-title" @mouseover="titleMarquee.startScroll">
                 {{ currentSong.title }}
             </span>
-            <span class="song-artist">
+            <span class="song-artist" @mouseover="artistMarquee.startScroll">
                 {{ currentSong.artist }}
             </span>
 
@@ -84,25 +49,20 @@ const stopTitleScroll = () => {
                     () => {
                         $emit('reload');
                         reloaded = true;
-                        stopTitleScroll();
+                        titleMarquee.stopScroll();
+                        artistMarquee.stopScroll();
                     }
                 ">
-                <button class="reload material-symbols-outlined">sync</button>
+                <button class="material-symbols-outlined">sync</button>
+                <button
+                    @click="openLink"
+                    class="material-symbols-outlined">
+                    open_in_new
+                </button>
             </div>
         </div>
     </div>
 </template>
-
-<style>
-@keyframes scroll {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(var(--scroll-width));
-    }
-}
-</style>
 
 <style scoped>
 .container {
@@ -140,11 +100,14 @@ const stopTitleScroll = () => {
     font-weight: bold;
 }
 
+.song-title,
+.song-artist {
+    white-space: nowrap;
+}
+
 .song-title {
     font-size: 3rem;
     font-weight: bolder;
-
-    white-space: nowrap;
 }
 
 .song-artist {
