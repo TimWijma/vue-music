@@ -1,88 +1,153 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Fetch } from "../scripts/fetch";
 import { Song } from "../scripts/song";
-import { calculateBackgroundColor, calculateTextColor } from "../scripts/colors";
 
-const apikey = import.meta.env.VITE_LASTFM_API_KEY;
-const user = "Drag0nEye";
+const props = defineProps<{
+    currentSong: Song;
+}>();
 
-const nowPlaying = ref<boolean>(false);
-const currentSong = ref<Song | null>(null);
-const rgb = ref<number[]>([]);
+let reloaded = ref(false);
+let isAnimating = ref(false);
 
-const getCurrentSong = async () => {
-    await Fetch.get("http://ws.audioscrobbler.com/2.0", {
-        method: "user.getrecenttracks",
-        format: "json",
-        user: user,
-        api_key: apikey,
-        limit: 1,
-    })
-        .then(async (response) => {
-            let recentTracks = response.recenttracks;
-            nowPlaying.value = recentTracks.track[0]["@attr"];
+const getTitleWidth = () => {
+    let originalElement = document.querySelector(".song-title") as HTMLElement;
+    let cloneElement = originalElement.cloneNode(true) as HTMLElement;
+    cloneElement.style.visibility = "hidden";
+    cloneElement.style.position = "absolute";
+    cloneElement.style.width = "auto";
+    cloneElement.style.whiteSpace = "nowrap";
 
-            if (nowPlaying.value) {
-                let song = recentTracks.track[0];
-                let title = song.name;
-                let artist = song.artist["#text"];
-                let cover = song.image[3]["#text"];
+    document.body.appendChild(cloneElement);
+    let width = cloneElement.offsetWidth;
+    document.body.removeChild(cloneElement);
 
-                currentSong.value = new Song(title, artist, cover);
-
-                rgb.value = await calculateBackgroundColor(cover);
-
-                // set css variables
-                document.documentElement.style.setProperty(
-                    "--text-color",
-                    calculateTextColor(rgb.value)
-                );
-                document.documentElement.style.setProperty("--bg-color", `rgb(${rgb.value})`);
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    return width;
 };
 
-getCurrentSong();
+const checkTitleLength = () => {
+    if (isAnimating.value) return;
+
+    let titleWidth = getTitleWidth();
+    let title = document.querySelector(".song-title") as HTMLElement;
+    let info = document.querySelector(".song-info") as HTMLElement;
+
+    if (titleWidth > info.offsetWidth) {
+        isAnimating.value = true;
+        const gap = " - ";
+        title.innerHTML = props.currentSong.title + gap;
+        const gapWidth = getTitleWidth();
+        title.innerHTML =
+            props.currentSong.title + gap + props.currentSong.title;
+
+        title.style.setProperty("--scroll-width", `-${gapWidth + 8}px`);
+
+        const duration = titleWidth / 150;
+        title.style.animation = `scroll ${duration}s linear`;
+
+        title.addEventListener(
+            "animationend",
+            () => {
+                stopTitleScroll();
+            },
+            { once: true }
+        );
+    } else {
+        title.innerHTML = props.currentSong.title;
+        title.style.animation = "none";
+    }
+};
+
+const stopTitleScroll = () => {
+    let title = document.querySelector(".song-title") as HTMLElement;
+    title.innerHTML = props.currentSong.title;
+    title.style.animation = "none";
+    isAnimating.value = false;
+};
 </script>
 
 <template>
-    <div v-if="nowPlaying && currentSong && rgb" class="container">
+    <div class="container" :class="{ transition: reloaded }">
         <img :src="currentSong.cover" class="song-cover" alt="Cover" />
 
         <div class="song-info">
-            <span class="song-title">
+            <span class="song-alt">Currently playing</span>
+            <span class="song-title" @mouseover="checkTitleLength">
                 {{ currentSong.title }}
             </span>
-            <div class="song-artist">
+            <span class="song-artist">
                 {{ currentSong.artist }}
+            </span>
+
+            <div
+                class="song-buttons"
+                @click="
+                    () => {
+                        $emit('reload');
+                        reloaded = true;
+                        stopTitleScroll();
+                    }
+                ">
+                <button class="reload material-symbols-outlined">sync</button>
             </div>
         </div>
-
-        <button @click="getCurrentSong">Get current song</button>
     </div>
 </template>
 
+<style>
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(var(--scroll-width));
+    }
+}
+</style>
+
 <style scoped>
 .container {
-    width: 100%;
-    height: 100%;
-
-    color: var(--text-color);
-    background-color: var(--bg-color);
-
-    transition: 0.5s ease;
+    width: 65%;
 
     display: flex;
     align-items: center;
+
+    padding: 16px;
+
+    background-color: var(--vibrant-bg);
+
+    border-radius: 30px;
 }
 
 .song-cover {
-    width: 100px;
-    height: 100px;
-    margin: 0 20px;
+    width: 250px;
+    height: auto;
+
+    border-radius: 30px;
+}
+
+.song-info {
+    overflow: hidden;
+    margin-left: 16px;
+}
+
+.song-info span {
+    display: block;
+}
+
+.song-alt {
+    opacity: 0.35;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.song-title {
+    font-size: 3rem;
+    font-weight: bolder;
+
+    white-space: nowrap;
+}
+
+.song-artist {
+    font-size: 2.5rem;
 }
 </style>
