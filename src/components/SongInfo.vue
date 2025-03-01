@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { Song } from "../scripts/song";
 import { Marquee } from "../scripts/marquee";
 
@@ -17,17 +17,17 @@ const openLink = () => {
 };
 
 onMounted(() => {
-    titleMarquee = new Marquee(
-        ".song-title",
-        ".song-info",
-        props.currentSong.title
-    );
-    artistMarquee = new Marquee(
-        ".song-artist",
-        ".song-info",
-        props.currentSong.artist
-    );
+    titleMarquee = new Marquee(".song-title", ".song-info", props.currentSong.title);
+    artistMarquee = new Marquee(".song-artist", ".song-info", props.currentSong.artist);
 });
+
+watch(
+    () => props.currentSong,
+    () => {
+        titleMarquee.originalText = props.currentSong.title;
+        artistMarquee.originalText = props.currentSong.artist;
+    }
+);
 </script>
 
 <template>
@@ -43,22 +43,21 @@ onMounted(() => {
                 {{ currentSong.artist }}
             </span>
 
-            <div
-                class="song-buttons"
-                @click="
-                    () => {
-                        $emit('reload');
-                        reloaded = true;
-                        titleMarquee.stopScroll();
-                        artistMarquee.stopScroll();
-                    }
-                ">
-                <button class="material-symbols-outlined">sync</button>
+            <div class="song-buttons">
                 <button
-                    @click="openLink"
-                    class="material-symbols-outlined">
-                    open_in_new
+                    @click="
+                        () => {
+                            $emit('reload');
+                            reloaded = true;
+                            titleMarquee.stopScroll();
+                            artistMarquee.stopScroll();
+                        }
+                    "
+                    class="material-symbols-outlined"
+                >
+                    sync
                 </button>
+                <button @click="openLink" class="material-symbols-outlined">open_in_new</button>
             </div>
         </div>
     </div>
@@ -67,14 +66,10 @@ onMounted(() => {
 <style scoped>
 .container {
     width: 65%;
-
     display: flex;
     align-items: center;
-
-    padding: 16px;
-
+    padding: 24px;
     background-color: var(--vibrant-bg);
-
     border-radius: 30px;
 }
 
@@ -82,7 +77,7 @@ onMounted(() => {
     width: 250px;
     height: auto;
 
-    border-radius: 30px;
+    border-radius: 20px;
 }
 
 .song-info {
@@ -112,5 +107,9 @@ onMounted(() => {
 
 .song-artist {
     font-size: 2.5rem;
+}
+
+.song-buttons {
+    margin-top: 16px;
 }
 </style>

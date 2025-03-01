@@ -1,8 +1,8 @@
 :root {
     --vibrant-text: black;
     --vibrant-dark-text: white;
-    --vibrant-bg: white;
-    --vibrant-dark-bg: #f0f0f0;
+    --vibrant-bg: #f0f0f0;
+    --vibrant-dark-bg: white;
 }
 
 html,
