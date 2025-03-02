@@ -8,6 +8,7 @@ import { calculateBackgroundColor, calculateTextColor } from "./scripts/colors";
 import { API_KEY, getSpotifyToken, USERNAME } from "./scripts/globals";
 import TopSongs from "./components/TopTracks.vue";
 import TopArtists from "./components/TopArtists.vue";
+import TopAlbums from "./components/TopAlbums.vue";
 
 const nowPlaying = ref<boolean>(false);
 const currentSong = ref<Song | null>(null);
@@ -75,6 +76,9 @@ getCurrentSong();
             </div>
             <div class="list-container">
                 <TopArtists />
+            </div>
+            <div class="list-container">
+                <TopAlbums />
             </div>
         </div>
     </div>

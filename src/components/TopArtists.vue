@@ -2,13 +2,13 @@
 import { ref } from "vue";
 import { Fetch } from "../scripts/Fetch";
 import { API_KEY, USERNAME } from "../scripts/globals";
-import { getArtistImage } from "../scripts/images";
+import { getImageSpotify, MediaTypeSpotify } from "../scripts/images";
 import TopRecord from "./TopRecord.vue";
 import { Artist } from "../scripts/Records";
 
 const artists = ref<Artist[]>([]);
 
-const getCurrentSong = async () => {
+const getTopArtists = async () => {
     await Fetch.get("http://ws.audioscrobbler.com/2.0", {
         method: "user.gettopartists",
         format: "json",
@@ -32,7 +32,7 @@ const getCurrentSong = async () => {
             );
 
             topartists.forEach((artist: any, index: number) => {
-                getArtistImage(artist.name)
+                getImageSpotify(artist.name, MediaTypeSpotify.Artist)
                     .then((image) => {
                         artists.value[index] = new Artist(
                             index + 1,
@@ -50,15 +50,15 @@ const getCurrentSong = async () => {
         });
 };
 
-getCurrentSong();
+getTopArtists();
 </script>
 
 <template>
     <div class="top-records">
         <h2>Top Artists</h2>
         <div class="records-container">
-            <div v-for="track in artists" :key="track.rank" class="track">
-                <TopRecord :record="track" />
+            <div v-for="artist in artists" :key="artist.rank">
+                <TopRecord :record="artist" />
             </div>
         </div>
     </div>

@@ -46,3 +46,17 @@ export class Artist extends Record {
         super(rank, name, image, url, playcount);
     }
 }
+
+export class Album extends Record {
+    constructor(
+        rank: number,
+        name: string,
+        artist: string,
+        image: string,
+        url: string,
+        playcount: number
+    ) {
+        super(rank, name, image, url, playcount);
+        this.artist = artist;
+    }
+}
