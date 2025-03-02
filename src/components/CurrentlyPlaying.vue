@@ -1,33 +1,85 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import MarqueeComponent from "./MarqueeComponent.vue";
-import type { Track } from "../scripts/Records";
-
-const props = defineProps<{
-    currentSong: Track;
-}>();
-
-const $emit = defineEmits();
+import { Fetch } from "../scripts/Fetch";
+import { calculateBackgroundColor, calculateTextColor } from "../scripts/colors";
+import { API_KEY, getSpotifyToken, USERNAME } from "../scripts/globals";
+import { Track } from "../scripts/Records";
 
 let reloaded = ref(false);
+
+const currentlyPlaying = ref(false);
+const currentSong = ref<Track | null>(null);
+
+const getCurrentSong = async () => {
+    await Fetch.get("http://ws.audioscrobbler.com/2.0", {
+        method: "user.getrecenttracks",
+        format: "json",
+        user: USERNAME,
+        api_key: API_KEY,
+        limit: 1,
+    })
+        .then(async (response: { recenttracks: any }) => {
+            let track = response.recenttracks.track[0];
+            if (track["@attr"] && track["@attr"].nowplaying === "true") {
+                currentlyPlaying.value = true;
+            }
+
+            if (track) {
+                let name = track.name;
+                let artist = track.artist["#text"];
+                let image = track.image[3]["#text"];
+                let url = track.url;
+
+                currentSong.value = new Track(-1, name, artist, image, url, -1);
+
+                let colors = await calculateBackgroundColor(image);
+                document.documentElement.style.setProperty(
+                    "--vibrant-text",
+                    calculateTextColor(colors.vibrant)
+                );
+                document.documentElement.style.setProperty(
+                    "--vibrant-dark-text",
+                    calculateTextColor(colors.darkVibrant)
+                );
+                document.documentElement.style.setProperty(
+                    "--vibrant-bg",
+                    `rgb(${colors.vibrant})`
+                );
+                document.documentElement.style.setProperty(
+                    "--vibrant-dark-bg",
+                    `rgb(${colors.darkVibrant})`
+                );
+            }
+        })
+        .catch((error: any) => {
+            console.log(error);
+        });
+};
+
+getSpotifyToken();
+getCurrentSong();
 
 const reload = () => {
     reloaded.value = true;
     document.documentElement.style.setProperty("--transition", "0.5s ease");
-    $emit("reload");
+    getCurrentSong();
 };
 
 const openLink = () => {
-    window.open(props.currentSong.url, "_blank");
+    if (currentSong.value) {
+        window.open(currentSong.value.url, "_blank");
+    }
 };
 </script>
 
 <template>
-    <div class="container transition">
+    <div class="container transition" v-if="currentSong">
         <img :src="currentSong.image" class="song-cover" alt="Cover" />
 
         <div class="song-info">
-            <span class="song-alt">Currently playing</span>
+            <span class="song-alt" v-if="currentlyPlaying">Currently playing</span>
+            <span class="song-alt" v-else>Last played</span>
             <span class="song-name">
                 <MarqueeComponent :text="currentSong.name" activate-on-load :key="currentSong.name">
                     {{ currentSong.name }}

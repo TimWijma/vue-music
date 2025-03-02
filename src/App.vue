@@ -1,72 +1,15 @@
 <script setup lang="ts">
 import CurrentlyPlaying from "./components/CurrentlyPlaying.vue";
-
-import { ref } from "vue";
-import { Fetch } from "./scripts/Fetch";
-import { calculateBackgroundColor, calculateTextColor } from "./scripts/colors";
-import { API_KEY, getSpotifyToken, USERNAME } from "./scripts/globals";
 import TopSongs from "./components/TopTracks.vue";
 import TopArtists from "./components/TopArtists.vue";
 import TopAlbums from "./components/TopAlbums.vue";
-import { Track } from "./scripts/Records";
-
-const nowPlaying = ref<boolean>(false);
-const currentSong = ref<Track | null>(null);
-
-const getCurrentSong = async () => {
-    await Fetch.get("http://ws.audioscrobbler.com/2.0", {
-        method: "user.getrecenttracks",
-        format: "json",
-        user: USERNAME,
-        api_key: API_KEY,
-        limit: 1,
-    })
-        .then(async (response: { recenttracks: any }) => {
-            let recentTracks = response.recenttracks;
-            nowPlaying.value = recentTracks.track[0]["@attr"];
-
-            if (nowPlaying.value) {
-                let song = recentTracks.track[0];
-                let name = song.name;
-                let artist = song.artist["#text"];
-                let image = song.image[3]["#text"];
-                let url = song.url;
-
-                currentSong.value = new Track(-1, name, artist, image, url, -1);
-
-                let colors = await calculateBackgroundColor(image);
-                document.documentElement.style.setProperty(
-                    "--vibrant-text",
-                    calculateTextColor(colors.vibrant)
-                );
-                document.documentElement.style.setProperty(
-                    "--vibrant-dark-text",
-                    calculateTextColor(colors.darkVibrant)
-                );
-                document.documentElement.style.setProperty(
-                    "--vibrant-bg",
-                    `rgb(${colors.vibrant})`
-                );
-                document.documentElement.style.setProperty(
-                    "--vibrant-dark-bg",
-                    `rgb(${colors.darkVibrant})`
-                );
-            }
-        })
-        .catch((error: any) => {
-            console.log(error);
-        });
-};
-
-getSpotifyToken();
-getCurrentSong();
 </script>
 
 <template>
     <div class="app-container transition">
-        <div v-if="nowPlaying && currentSong" class="info-container">
+        <div class="info-container">
             <div class="info">
-                <CurrentlyPlaying :currentSong @reload="getCurrentSong" />
+                <CurrentlyPlaying />
             </div>
         </div>
         <div class="list-containers">
