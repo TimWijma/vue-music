@@ -37,8 +37,6 @@ export const getArtistImage = async (artist: string) => {
         true
     )
         .then((response) => {
-            console.log(response);
-
             artistImage = response.artists.items[0].images[0].url;
         })
         .catch((error) => {

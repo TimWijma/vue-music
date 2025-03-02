@@ -2,13 +2,13 @@
 import { ref } from "vue";
 import { Fetch } from "../scripts/Fetch";
 import { API_KEY, USERNAME } from "../scripts/globals";
-import { Track } from "../scripts/Track";
+import { Track } from "../scripts/Records";
 import { getImage, MediaType } from "../scripts/images";
-import TopTrack from "./TopTrack.vue";
+import TopRecords from "./TopRecord.vue";
 
 const tracks = ref<Track[]>([]);
 
-const getCurrentSong = async () => {
+const getTopTracks = async () => {
     await Fetch.get("http://ws.audioscrobbler.com/2.0", {
         method: "user.gettoptracks",
         format: "json",
@@ -26,7 +26,7 @@ const getCurrentSong = async () => {
                         index + 1,
                         track.name,
                         track.artist.name,
-                        "", // Empty image initially
+                        "",
                         track.url,
                         track.playcount
                     )
@@ -52,35 +52,16 @@ const getCurrentSong = async () => {
         });
 };
 
-getCurrentSong();
+getTopTracks();
 </script>
 
 <template>
-    <div class="top-tracks">
+    <div class="top-records">
         <h2>Top Tracks</h2>
-        <div class="tracks">
+        <div class="records-container">
             <div v-for="track in tracks" :key="track.rank" class="track">
-                <TopTrack :track="track" />
+                <TopRecords :record="track" />
             </div>
         </div>
     </div>
 </template>
-
-<style scoped>
-h2 {
-    font-weight: bolder;
-    font-size: 2rem;
-    margin: 16px 0;
-}
-
-.top-tracks {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    padding: 24px;
-    background-color: var(--vibrant-dark-bg);
-    color: var(--vibrant-dark-text);
-    border-radius: 30px;
-}
-</style>

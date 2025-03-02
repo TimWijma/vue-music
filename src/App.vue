@@ -5,7 +5,7 @@ import { ref } from "vue";
 import { Fetch } from "./scripts/Fetch";
 import { Song } from "./scripts/Song";
 import { calculateBackgroundColor, calculateTextColor } from "./scripts/colors";
-import { API_KEY, USERNAME } from "./scripts/globals";
+import { API_KEY, getSpotifyToken, USERNAME } from "./scripts/globals";
 import TopSongs from "./components/TopTracks.vue";
 import TopArtists from "./components/TopArtists.vue";
 
@@ -110,10 +110,14 @@ getCurrentSong();
 }
 
 .list-containers {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 48px;
+    justify-content: center;
 }
 
 .list-container {
     display: flex;
+    white-space: nowrap;
 }
 </style>

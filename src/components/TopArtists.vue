@@ -2,11 +2,11 @@
 import { ref } from "vue";
 import { Fetch } from "../scripts/Fetch";
 import { API_KEY, USERNAME } from "../scripts/globals";
-import { Track } from "../scripts/Track";
 import { getArtistImage } from "../scripts/images";
-import TopTrack from "./TopTrack.vue";
+import TopRecord from "./TopRecord.vue";
+import { Artist } from "../scripts/Records";
 
-const artists = ref<Track[]>([]);
+const artists = ref<Artist[]>([]);
 
 const getCurrentSong = async () => {
     await Fetch.get("http://ws.audioscrobbler.com/2.0", {
@@ -19,15 +19,13 @@ const getCurrentSong = async () => {
     })
         .then(async (response) => {
             let topartists = response.topartists.artist;
-            console.log(topartists);
 
             artists.value = topartists.map(
                 (artist: any, index: number) =>
-                    new Track(
+                    new Artist(
                         index + 1,
                         artist.name,
                         "",
-                        "", // Empty image initially
                         artist.url,
                         artist.playcount
                     )
@@ -36,10 +34,9 @@ const getCurrentSong = async () => {
             topartists.forEach((artist: any, index: number) => {
                 getArtistImage(artist.name)
                     .then((image) => {
-                        artists.value[index] = new Track(
+                        artists.value[index] = new Artist(
                             index + 1,
                             artist.name,
-                            "",
                             image,
                             artist.url,
                             artist.playcount
@@ -57,31 +54,12 @@ getCurrentSong();
 </script>
 
 <template>
-    <div class="top-tracks">
+    <div class="top-records">
         <h2>Top Artists</h2>
-        <div class="tracks">
+        <div class="records-container">
             <div v-for="track in artists" :key="track.rank" class="track">
-                <TopTrack :track="track" />
+                <TopRecord :record="track" />
             </div>
         </div>
     </div>
 </template>
-
-<style scoped>
-h2 {
-    font-weight: bolder;
-    font-size: 2rem;
-    margin: 16px 0;
-}
-
-.top-tracks {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    padding: 24px;
-    background-color: var(--vibrant-dark-bg);
-    color: var(--vibrant-dark-text);
-    border-radius: 30px;
-}
-</style>
