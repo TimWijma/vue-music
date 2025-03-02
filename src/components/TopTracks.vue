@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { Fetch } from "../scripts/Fetch";
 import { API_KEY, USERNAME } from "../scripts/globals";
 import { Track } from "../scripts/Records";
-import { getImageITunes, MediaTypeITunes } from "../scripts/images";
+import { getImage, MediaType } from "../scripts/images";
 import TopRecords from "./TopRecord.vue";
 
 const tracks = ref<Track[]>([]);
@@ -33,7 +33,7 @@ const getTopTracks = async () => {
             );
 
             toptracks.forEach((track: any, index: number) => {
-                getImageITunes(track.artist.name, track.name, MediaTypeITunes.Song)
+                getImage(`${track.artist.name}  ${track.name}`, MediaType.Song)
                     .then((image) => {
                         tracks.value[index] = new Track(
                             index + 1,

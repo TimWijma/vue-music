@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { Fetch } from "../scripts/Fetch";
 import { API_KEY, USERNAME } from "../scripts/globals";
-import { getImageSpotify, MediaTypeSpotify } from "../scripts/images";
+import { getImage, MediaType } from "../scripts/images";
 import TopRecord from "./TopRecord.vue";
 import { Artist } from "../scripts/Records";
 
@@ -32,7 +32,7 @@ const getTopArtists = async () => {
             );
 
             topartists.forEach((artist: any, index: number) => {
-                getImageSpotify(artist.name, MediaTypeSpotify.Artist)
+                getImage(artist.name, MediaType.Artist)
                     .then((image) => {
                         artists.value[index] = new Artist(
                             index + 1,

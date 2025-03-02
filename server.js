@@ -13,14 +13,14 @@ app.get("/api/spotifytoken", async (_, res) => {
 });
 
 app.get("/api/itunes", async (req, res) => {
-    const { artist, name = "", mediaType = "song" } = req.query;
+    const { search, mediaType = "song" } = req.query;
 
-    if (!artist) {
+    if (!search) {
         res.status(400).send("Missing required query parameters");
         return;
     }
 
-    const url = `https://itunes.apple.com/search?term=${artist}${"+" + name}&entity=${mediaType}`;
+    const url = `https://itunes.apple.com/search?term=${search}&entity=${mediaType}`;
     const response = await fetch(url);
     const data = await response.json();
 
