@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { Fetch } from "../scripts/Fetch";
 import { API_KEY, USERNAME } from "../scripts/globals";
 import { Track } from "../scripts/Track";
-import { getArtistImage } from "../scripts/itunes";
+import { getArtistImage } from "../scripts/images";
 import TopTrack from "./TopTrack.vue";
 
 const artists = ref<Track[]>([]);

@@ -12,8 +12,6 @@ import TopArtists from "./components/TopArtists.vue";
 const nowPlaying = ref<boolean>(false);
 const currentSong = ref<Song | null>(null);
 
-console.log(encodeURIComponent("TUPPERWAVE" + " " + "Market Square 7-Eleven"));
-
 const getCurrentSong = async () => {
     await Fetch.get("http://ws.audioscrobbler.com/2.0", {
         method: "user.getrecenttracks",
@@ -22,7 +20,7 @@ const getCurrentSong = async () => {
         api_key: API_KEY,
         limit: 1,
     })
-        .then(async (response) => {
+        .then(async (response: { recenttracks: any }) => {
             let recentTracks = response.recenttracks;
             nowPlaying.value = recentTracks.track[0]["@attr"];
 
@@ -55,11 +53,12 @@ const getCurrentSong = async () => {
                 );
             }
         })
-        .catch((error) => {
+        .catch((error: any) => {
             console.log(error);
         });
 };
 
+getSpotifyToken();
 getCurrentSong();
 </script>
 
