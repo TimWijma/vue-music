@@ -4,11 +4,11 @@ import { Marquee } from "../scripts/Marquee";
 
 const props = withDefaults(
     defineProps<{
-        originalText: string;
-        gapText?: string;
+        text: string;
+        gap?: string;
     }>(),
     {
-        gapText: " - ",
+        gap: " - ",
     }
 );
 
@@ -21,18 +21,18 @@ onMounted(() => {
         marqueeInstance = new Marquee(
             marqueeElement.value,
             marqueeContainer.value,
-            props.originalText,
-            props.gapText
+            props.text,
+            props.gap
         );
     }
 });
 
 watch(
-    () => props.originalText,
+    () => props.text,
     () => {
         if (marqueeInstance) {
             marqueeInstance.stopScroll();
-            marqueeInstance.originalText = props.originalText;
+            marqueeInstance.text = props.text;
         }
     }
 );
@@ -43,9 +43,7 @@ watch(
         ref="marqueeContainer"
         class="marquee-container"
         @mouseenter="marqueeInstance?.startScroll()">
-        <span ref="marqueeElement" class="marquee-text">{{
-            originalText
-        }}</span>
+        <span ref="marqueeElement" class="marquee-text">{{ text }}</span>
     </div>
 </template>
 

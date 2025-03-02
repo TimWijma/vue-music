@@ -10,15 +10,13 @@ defineProps<{
 <template>
     <div class="container">
         <span class="record-rank">{{ record.rank }}</span>
-        <img :src="record.image" class="rank-cover" alt="Cover" />
-        <div class="rank-info">
-            <span class="rank-title">
-                <MarqueeComponent :originalText="record.name" />
+        <img :src="record.image" class="record-cover" alt="Cover" />
+        <div class="record-info">
+            <span class="record-name">
+                <MarqueeComponent :text="record.name" />
             </span>
-            <span v-if="record.artist" class="rank-artist">{{
-                record.artist
-            }}</span>
-            <span class="rank-playcount">{{ record.playcount }} plays</span>
+            <span v-if="record.artist" class="record-artist">{{ record.artist }}</span>
+            <span class="record-playcount">{{ record.playcount }} plays</span>
         </div>
     </div>
 </template>
@@ -41,7 +39,7 @@ defineProps<{
     text-align: center;
 }
 
-.rank-cover {
+.record-cover {
     width: 75px;
     height: 75px;
     object-fit: cover;
@@ -49,23 +47,19 @@ defineProps<{
     border-radius: 8px;
 }
 
-.rank-info {
+.record-info {
     display: flex;
     flex-direction: column;
     margin-left: 8px;
     overflow: hidden;
 }
 
-.rank-info span {
-    /* white-space: nowrap; */
-}
-
-.rank-title {
+.record-name {
     font-weight: bold;
     font-size: 1.5rem;
 }
 
-.rank-artist {
+.record-artist {
     font-size: 1.25rem;
 }
 </style>

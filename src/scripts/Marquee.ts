@@ -2,8 +2,8 @@ export class Marquee {
     element: HTMLElement | null;
     container: HTMLElement | null;
     isAnimating: boolean;
-    originalText: string;
-    gapText: string;
+    text: string;
+    gap: string;
 
     constructor(
         element: HTMLElement | null,
@@ -14,8 +14,8 @@ export class Marquee {
         this.element = element;
         this.container = container;
         this.isAnimating = false;
-        this.originalText = originalText;
-        this.gapText = gapText;
+        this.text = originalText;
+        this.gap = gapText;
     }
 
     getWidth = () => {
@@ -38,21 +38,17 @@ export class Marquee {
         if (this.isAnimating) return;
         if (!this.element || !this.container) return;
 
-        let titleWidth = this.getWidth()!; // Can not be null because it will return before reaching this line
+        let elementWidth = this.getWidth()!; // Can not be null because it will return before reaching this line
 
-        if (titleWidth > this.container.offsetWidth) {
+        if (elementWidth > this.container.offsetWidth) {
             this.isAnimating = true;
-            this.element.innerHTML = this.originalText + this.gapText;
+            this.element.innerHTML = this.text + this.gap;
             const gapWidth = this.getWidth()!;
-            this.element.innerHTML =
-                this.originalText + this.gapText + this.originalText;
+            this.element.innerHTML = this.text + this.gap + this.text;
 
-            this.element.style.setProperty(
-                "--scroll-width",
-                `-${gapWidth}px`
-            );
+            this.element.style.setProperty("--scroll-width", `-${gapWidth}px`);
 
-            const duration = titleWidth / 125;
+            const duration = elementWidth / 125;
             this.element.style.animation = `scroll ${duration}s linear`;
 
             this.element.addEventListener(
@@ -70,7 +66,7 @@ export class Marquee {
     stopScroll = () => {
         if (!this.element) return;
 
-        this.element.innerHTML = this.originalText;
+        this.element.innerHTML = this.text;
         this.element.style.animation = "none";
         this.isAnimating = false;
     };

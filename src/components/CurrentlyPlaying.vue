@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Song } from "../scripts/Song";
 import MarqueeComponent from "./MarqueeComponent.vue";
+import type { Track } from "../scripts/Records";
 
 const props = defineProps<{
-    currentSong: Song;
+    currentSong: Track;
 }>();
 
 let reloaded = ref(false);
@@ -20,11 +20,11 @@ const openLink = () => {
 
         <div class="song-info">
             <span class="song-alt">Currently playing</span>
-            <span class="song-title">
-                <MarqueeComponent :originalText="currentSong.name" />
+            <span class="song-name">
+                <MarqueeComponent :text="currentSong.name" />
             </span>
-            <span class="song-artist">
-                <MarqueeComponent :originalText="currentSong.artist" />
+            <span class="song-artist" v-if="currentSong.artist">
+                <MarqueeComponent :text="currentSong.artist" />
             </span>
 
             <div class="song-buttons">
@@ -38,9 +38,7 @@ const openLink = () => {
                     class="material-symbols-outlined">
                     sync
                 </button>
-                <button @click="openLink" class="material-symbols-outlined">
-                    open_in_new
-                </button>
+                <button @click="openLink" class="material-symbols-outlined">open_in_new</button>
             </div>
         </div>
     </div>
@@ -78,12 +76,12 @@ const openLink = () => {
     font-weight: bold;
 }
 
-.song-title,
+.song-name,
 .song-artist {
     white-space: nowrap;
 }
 
-.song-title {
+.song-name {
     font-size: 3rem;
     font-weight: bolder;
 }

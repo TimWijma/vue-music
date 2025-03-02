@@ -3,15 +3,15 @@ import CurrentlyPlaying from "./components/CurrentlyPlaying.vue";
 
 import { ref } from "vue";
 import { Fetch } from "./scripts/Fetch";
-import { Song } from "./scripts/Song";
 import { calculateBackgroundColor, calculateTextColor } from "./scripts/colors";
 import { API_KEY, getSpotifyToken, USERNAME } from "./scripts/globals";
 import TopSongs from "./components/TopTracks.vue";
 import TopArtists from "./components/TopArtists.vue";
 import TopAlbums from "./components/TopAlbums.vue";
+import { Track } from "./scripts/Records";
 
 const nowPlaying = ref<boolean>(false);
-const currentSong = ref<Song | null>(null);
+const currentSong = ref<Track | null>(null);
 
 const getCurrentSong = async () => {
     await Fetch.get("http://ws.audioscrobbler.com/2.0", {
@@ -27,15 +27,14 @@ const getCurrentSong = async () => {
 
             if (nowPlaying.value) {
                 let song = recentTracks.track[0];
-                let title = song.name;
+                let name = song.name;
                 let artist = song.artist["#text"];
-                let cover = song.image[3]["#text"];
+                let image = song.image[3]["#text"];
                 let url = song.url;
 
-                currentSong.value = new Song(title, artist, cover, url);
+                currentSong.value = new Track(-1, name, artist, image, url, -1);
 
-                let colors = await calculateBackgroundColor(cover);
-
+                let colors = await calculateBackgroundColor(image);
                 document.documentElement.style.setProperty(
                     "--vibrant-text",
                     calculateTextColor(colors.vibrant)
