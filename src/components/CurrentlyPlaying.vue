@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { ref } from "vue";
 import { Song } from "../scripts/Song";
-import { Marquee } from "../scripts/Marquee";
 import MarqueeComponent from "./MarqueeComponent.vue";
 
 const props = defineProps<{
@@ -9,9 +8,6 @@ const props = defineProps<{
 }>();
 
 let reloaded = ref(false);
-
-let titleMarquee: Marquee;
-let artistMarquee: Marquee;
 
 const openLink = () => {
     window.open(props.currentSong.url, "_blank");
@@ -25,14 +21,10 @@ const openLink = () => {
         <div class="song-info">
             <span class="song-alt">Currently playing</span>
             <span class="song-title">
-                <MarqueeComponent
-                    :originalText="currentSong.name"
-                    gapText=" - " />
+                <MarqueeComponent :originalText="currentSong.name" />
             </span>
             <span class="song-artist">
-                <MarqueeComponent
-                    :originalText="currentSong.artist"
-                    gapText=" - " />
+                <MarqueeComponent :originalText="currentSong.artist" />
             </span>
 
             <div class="song-buttons">

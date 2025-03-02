@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { ref, onMounted, defineProps } from "vue";
+import { ref, onMounted, defineProps, watch } from "vue";
 import { Marquee } from "../scripts/Marquee";
 
-const props = defineProps<{
-    originalText: string;
-    gapText: string;
-}>();
+const props = withDefaults(
+    defineProps<{
+        originalText: string;
+        gapText?: string;
+    }>(),
+    {
+        gapText: " - ",
+    }
+);
 
 const marqueeElement = ref(null);
 const marqueeContainer = ref(null);
@@ -21,6 +26,16 @@ onMounted(() => {
         );
     }
 });
+
+watch(
+    () => props.originalText,
+    () => {
+        if (marqueeInstance) {
+            marqueeInstance.stopScroll();
+            marqueeInstance.originalText = props.originalText;
+        }
+    }
+);
 </script>
 
 <template>

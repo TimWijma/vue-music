@@ -52,7 +52,7 @@ export class Marquee {
                 `-${gapWidth}px`
             );
 
-            const duration = titleWidth / 150;
+            const duration = titleWidth / 125;
             this.element.style.animation = `scroll ${duration}s linear`;
 
             this.element.addEventListener(
