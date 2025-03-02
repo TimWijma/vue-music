@@ -1,52 +1,55 @@
 export class Marquee {
-    element: HTMLElement;
-    container: HTMLElement;
+    element: HTMLElement | null;
+    container: HTMLElement | null;
     isAnimating: boolean;
     originalText: string;
     gapText: string;
 
     constructor(
-        element: string,
-        container: string,
+        element: HTMLElement | null,
+        container: HTMLElement | null,
         originalText: string,
         gapText: string = " - "
     ) {
-        this.element = document.querySelector(element) as HTMLElement;
-        this.container = document.querySelector(container) as HTMLElement;
+        this.element = element;
+        this.container = container;
         this.isAnimating = false;
         this.originalText = originalText;
         this.gapText = gapText;
     }
 
     getWidth = () => {
+        if (!this.element) return;
+
         let cloneElement = this.element.cloneNode(true) as HTMLElement;
         cloneElement.style.visibility = "hidden";
         cloneElement.style.position = "absolute";
         cloneElement.style.width = "auto";
         cloneElement.style.whiteSpace = "nowrap";
 
-        document.body.appendChild(cloneElement);
+        this.container?.appendChild(cloneElement);
         let width = cloneElement.offsetWidth;
-        document.body.removeChild(cloneElement);
+        this.container?.removeChild(cloneElement);
 
         return width;
     };
 
     startScroll = () => {
         if (this.isAnimating) return;
+        if (!this.element || !this.container) return;
 
-        let titleWidth = this.getWidth();
+        let titleWidth = this.getWidth()!; // Can not be null because it will return before reaching this line
 
         if (titleWidth > this.container.offsetWidth) {
             this.isAnimating = true;
             this.element.innerHTML = this.originalText + this.gapText;
-            const gapWidth = this.getWidth();
+            const gapWidth = this.getWidth()!;
             this.element.innerHTML =
                 this.originalText + this.gapText + this.originalText;
 
             this.element.style.setProperty(
                 "--scroll-width",
-                `-${gapWidth + 8}px`
+                `-${gapWidth}px`
             );
 
             const duration = titleWidth / 150;
@@ -65,6 +68,8 @@ export class Marquee {
     };
 
     stopScroll = () => {
+        if (!this.element) return;
+
         this.element.innerHTML = this.originalText;
         this.element.style.animation = "none";
         this.isAnimating = false;
