@@ -4,6 +4,7 @@ export class Marquee {
     isAnimating: boolean;
     text: string;
     gap: string;
+    originalContent: Node | undefined;
 
     constructor(
         element: HTMLElement | null,
@@ -16,6 +17,7 @@ export class Marquee {
         this.isAnimating = false;
         this.text = originalText;
         this.gap = gapText;
+        this.originalContent = element?.cloneNode(true);
     }
 
     getWidth = () => {
@@ -42,9 +44,24 @@ export class Marquee {
 
         if (elementWidth > this.container.offsetWidth) {
             this.isAnimating = true;
-            this.element.innerHTML = this.text + this.gap;
-            const gapWidth = this.getWidth()!;
-            this.element.innerHTML = this.text + this.gap + this.text;
+
+            const wrapper = document.createElement("div");
+            wrapper.style.display = "inline-block";
+
+            const content1 = this.originalContent!.cloneNode(true);
+            const gap = document.createTextNode(this.gap);
+            const content2 = this.originalContent!.cloneNode(true);
+
+            wrapper.appendChild(content1);
+            wrapper.appendChild(gap);
+            wrapper.appendChild(content2);
+
+            while (this.element.firstChild) {
+                this.element.removeChild(this.element.firstChild);
+            }
+            this.element.appendChild(wrapper);
+
+            const gapWidth = this.getWidth()! - elementWidth;
 
             this.element.style.setProperty("--scroll-width", `-${gapWidth}px`);
 
@@ -66,7 +83,12 @@ export class Marquee {
     stopScroll = () => {
         if (!this.element) return;
 
-        this.element.innerHTML = this.text;
+        while (this.element.firstChild) {
+            this.element.removeChild(this.element.firstChild);
+        }
+        this.element.appendChild(this.originalContent!.cloneNode(true));
+
+        // this.element.innerHTML = this.text;
         this.element.style.animation = "none";
         this.isAnimating = false;
     };

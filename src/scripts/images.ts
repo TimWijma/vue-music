@@ -49,8 +49,6 @@ const getImageITunes = async (search: string, mediaType: MediaTypeITunes) => {
         mediaType,
     })
         .then((response) => {
-            console.log(response);
-
             image = response.results[0].artworkUrl100;
         })
         .catch((error) => {
@@ -100,16 +98,10 @@ export const getImage = async (search: string, mediaType: MediaType) => {
         const mediaTypePlatform = PlatformMediaMap[platform][mediaType];
         switch (platform) {
             case Platform.ITunes:
-                image = await getImageITunes(
-                    search,
-                    mediaTypePlatform as MediaTypeITunes
-                );
+                image = await getImageITunes(search, mediaTypePlatform as MediaTypeITunes);
                 break;
             case Platform.Spotify:
-                image = await getImageSpotify(
-                    search,
-                    mediaTypePlatform as MediaTypeSpotify
-                );
+                image = await getImageSpotify(search, mediaTypePlatform as MediaTypeSpotify);
                 break;
         }
 

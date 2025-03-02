@@ -13,7 +13,9 @@ defineProps<{
         <img :src="record.image" class="record-cover" alt="Cover" />
         <div class="record-info">
             <span class="record-name">
-                <MarqueeComponent :text="record.name" />
+                <MarqueeComponent :text="record.name">
+                    {{ record.name }}
+                </MarqueeComponent>
             </span>
             <span v-if="record.artist" class="record-artist">{{ record.artist }}</span>
             <span class="record-playcount">{{ record.playcount }} plays</span>

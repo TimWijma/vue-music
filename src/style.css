@@ -1,6 +1,6 @@
 :root {
     --vibrant-text: black;
-    --vibrant-dark-text: white;
+    --vibrant-dark-text: black;
     --vibrant-bg: #f0f0f0;
     --vibrant-dark-bg: white;
 }
@@ -20,6 +20,15 @@ body,
     box-sizing: border-box;
 }
 
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 button {
     background-color: var(--vibrant-bg);
     color: var(--vibrant-text);
@@ -36,6 +45,7 @@ button {
 
 .transition {
     transition: 0.5s ease;
+    transition-property: background-color, color;
 }
 
 @keyframes scroll {

@@ -6,9 +6,11 @@ const props = withDefaults(
     defineProps<{
         text: string;
         gap?: string;
+        activateOnLoad?: boolean;
     }>(),
     {
         gap: " - ",
+        activateOnLoad: false,
     }
 );
 
@@ -24,6 +26,12 @@ onMounted(() => {
             props.text,
             props.gap
         );
+
+        if (props.activateOnLoad) {
+            setTimeout(() => {
+                marqueeInstance.startScroll();
+            }, 1000);
+        }
     }
 });
 
@@ -42,8 +50,10 @@ watch(
     <div
         ref="marqueeContainer"
         class="marquee-container"
-        @mouseenter="marqueeInstance?.startScroll()">
-        <span ref="marqueeElement" class="marquee-text">{{ text }}</span>
+        @mouseover="marqueeInstance?.startScroll()">
+        <span ref="marqueeElement" class="marquee-text">
+            <slot></slot>
+        </span>
     </div>
 </template>
 
@@ -56,6 +66,5 @@ watch(
 
 .marquee-text {
     display: inline-block;
-    padding-right: 10px;
 }
 </style>

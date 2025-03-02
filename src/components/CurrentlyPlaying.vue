@@ -21,10 +21,17 @@ const openLink = () => {
         <div class="song-info">
             <span class="song-alt">Currently playing</span>
             <span class="song-name">
-                <MarqueeComponent :text="currentSong.name" />
+                <MarqueeComponent :text="currentSong.name" activate-on-load :key="currentSong.name">
+                    {{ currentSong.name }}
+                </MarqueeComponent>
             </span>
             <span class="song-artist" v-if="currentSong.artist">
-                <MarqueeComponent :text="currentSong.artist" />
+                <MarqueeComponent
+                    :text="currentSong.artist"
+                    activate-on-load
+                    :key="currentSong.artist">
+                    {{ currentSong.artist }}
+                </MarqueeComponent>
             </span>
 
             <div class="song-buttons">

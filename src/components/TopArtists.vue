@@ -22,13 +22,7 @@ const getTopArtists = async () => {
 
             artists.value = topartists.map(
                 (artist: any, index: number) =>
-                    new Artist(
-                        index + 1,
-                        artist.name,
-                        "",
-                        artist.url,
-                        artist.playcount
-                    )
+                    new Artist(index + 1, artist.name, "", artist.url, artist.playcount)
             );
 
             topartists.forEach((artist: any, index: number) => {
