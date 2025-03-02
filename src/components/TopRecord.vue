@@ -1,9 +1,17 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
 import { Record } from "../scripts/Records";
+import { Marquee } from "../scripts/Marquee";
 
-defineProps<{
+const props = defineProps<{
     record: Record;
 }>();
+
+let titleMarquee: Marquee;
+
+onMounted(() => {
+    titleMarquee = new Marquee(".rank-title", ".rank-info", props.record.name);
+})
 </script>
 
 <template>
@@ -11,7 +19,7 @@ defineProps<{
         <span class="record-rank">{{ record.rank }}</span>
         <img :src="record.image" class="rank-cover" alt="Cover" />
         <div class="rank-info">
-            <span class="rank-title">{{ record.name }}</span>
+            <span class="rank-title" @mouseover="titleMarquee.startScroll">{{ record.name }}</span>
             <span v-if="record.artist" class="rank-artist">{{
                 record.artist
             }}</span>

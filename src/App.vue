@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SongInfo from "./components/SongInfo.vue";
+import CurrentlyPlaying from "./components/CurrentlyPlaying.vue";
 
 import { ref } from "vue";
 import { Fetch } from "./scripts/Fetch";
@@ -67,7 +67,7 @@ getCurrentSong();
     <div class="app-container">
         <div v-if="nowPlaying && currentSong" class="info-container">
             <div class="info">
-                <SongInfo :currentSong @reload="getCurrentSong" />
+                <CurrentlyPlaying :currentSong @reload="getCurrentSong" />
             </div>
         </div>
         <div class="list-containers">
