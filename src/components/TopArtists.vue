@@ -49,7 +49,10 @@ getTopArtists();
 
 <template>
     <div class="top-records transition">
-        <h2>Top Artists</h2>
+        <div class="top-records-title">
+            <h2>Top Artists</h2>
+            <span>Last 30 days</span>
+        </div>
         <div class="records-container">
             <div v-for="artist in artists" :key="artist.rank">
                 <TopRecord :record="artist" />

@@ -75,6 +75,20 @@ h2 {
     overflow: hidden;
 }
 
+.top-records-title {
+    margin-bottom: 16px;
+    margin-left: 28px;
+}
+
+.top-records-title h2 {
+    margin-bottom: 0;
+}
+
+.top-records-title span {
+    opacity: 0.35;
+    font-size: 1.2rem;
+}
+
 .records-container {
     display: flex;
     flex-direction: column;

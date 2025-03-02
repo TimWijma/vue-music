@@ -57,7 +57,10 @@ getTopTracks();
 
 <template>
     <div class="top-records transition">
-        <h2>Top Tracks</h2>
+        <div class="top-records-title">
+            <h2>Top Tracks</h2>
+            <span>Last 30 days</span>
+        </div>
         <div class="records-container">
             <div v-for="track in tracks" :key="track.rank">
                 <TopRecords :record="track" />

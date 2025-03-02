@@ -57,7 +57,10 @@ getTopAlbums();
 
 <template>
     <div class="top-records transition">
-        <h2>Top Albums</h2>
+        <div class="top-records-title">
+            <h2>Top Albums</h2>
+            <span>Last 30 days</span>
+        </div>
         <div class="records-container">
             <div v-for="album in albums" :key="album.rank">
                 <TopRecord :record="album" />
