@@ -3,14 +3,14 @@ import { ref } from "vue";
 import { Fetch } from "../scripts/Fetch";
 import { API_KEY, USERNAME } from "../scripts/globals";
 import { Track } from "../scripts/Track";
-import { getImage, MediaType } from "../scripts/itunes";
+import { getArtistImage } from "../scripts/itunes";
 import TopTrack from "./TopTrack.vue";
 
-const tracks = ref<Track[]>([]);
+const artists = ref<Track[]>([]);
 
 const getCurrentSong = async () => {
     await Fetch.get("http://ws.audioscrobbler.com/2.0", {
-        method: "user.gettoptracks",
+        method: "user.gettopartists",
         format: "json",
         user: USERNAME,
         api_key: API_KEY,
@@ -18,30 +18,31 @@ const getCurrentSong = async () => {
         period: "1month",
     })
         .then(async (response) => {
-            let toptracks = response.toptracks.track;
+            let topartists = response.topartists.artist;
+            console.log(topartists);
 
-            tracks.value = toptracks.map(
-                (track: any, index: number) =>
+            artists.value = topartists.map(
+                (artist: any, index: number) =>
                     new Track(
                         index + 1,
-                        track.name,
-                        track.artist.name,
+                        artist.name,
+                        "",
                         "", // Empty image initially
-                        track.url,
-                        track.playcount
+                        artist.url,
+                        artist.playcount
                     )
             );
 
-            toptracks.forEach((track: any, index: number) => {
-                getImage(track.artist.name, track.name, MediaType.Song)
+            topartists.forEach((artist: any, index: number) => {
+                getArtistImage(artist.name)
                     .then((image) => {
-                        tracks.value[index] = new Track(
+                        artists.value[index] = new Track(
                             index + 1,
-                            track.name,
-                            track.artist.name,
+                            artist.name,
+                            "",
                             image,
-                            track.url,
-                            track.playcount
+                            artist.url,
+                            artist.playcount
                         );
                     })
                     .catch((error) => console.log(error));
@@ -57,9 +58,9 @@ getCurrentSong();
 
 <template>
     <div class="top-tracks">
-        <h2>Top Tracks</h2>
+        <h2>Top Artists</h2>
         <div class="tracks">
-            <div v-for="track in tracks" :key="track.rank" class="track">
+            <div v-for="track in artists" :key="track.rank" class="track">
                 <TopTrack :track="track" />
             </div>
         </div>

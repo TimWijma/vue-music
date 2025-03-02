@@ -1,3 +1,5 @@
+import { SPOTIFY_TOKEN } from "./globals";
+
 /**
  * Fetch wrapper
  *
@@ -15,9 +17,14 @@
  * You can pass an already stringified JSON object or a JS object.
  */
 export class Fetch {
-    static async get(url: string, params: any = {}) {
+    static async get(url: string, params: any = {}, token: boolean = false) {
         let apiUrl = Fetch.createUrl(url, params);
         return fetch(apiUrl, {
+            headers: token
+                ? {
+                      Authorization: "Bearer " + SPOTIFY_TOKEN,
+                  }
+                : {},
             method: "GET",
         }).then(Fetch.responseHandler);
     }

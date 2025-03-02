@@ -5,15 +5,15 @@ const app = express();
 app.use(cors());
 
 app.get("/api/itunes", async (req, res) => {
-    const { artist, name, mediaType = "song" } = req.query;
+    const { artist, name = "", mediaType = "song" } = req.query;
     console.log(req.query);
 
-    if (!artist || !name) {
+    if (!artist) {
         res.status(400).send("Missing required query parameters");
         return;
     }
 
-    const url = `https://itunes.apple.com/search?term=${artist}+ ${name}&entity=${mediaType}`;
+    const url = `https://itunes.apple.com/search?term=${artist}${"+" + name}&entity=${mediaType}`;
     const response = await fetch(url);
     const data = await response.json();
 

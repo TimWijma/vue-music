@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { Track } from "../scripts/Track";
 
-const props = defineProps<{
+defineProps<{
     track: Track;
 }>();
-
-console.log(props.track);
 </script>
 
 <template>

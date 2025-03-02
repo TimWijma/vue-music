@@ -7,6 +7,7 @@ import { Song } from "./scripts/Song";
 import { calculateBackgroundColor, calculateTextColor } from "./scripts/colors";
 import { API_KEY, USERNAME } from "./scripts/globals";
 import TopSongs from "./components/TopTracks.vue";
+import TopArtists from "./components/TopArtists.vue";
 
 const nowPlaying = ref<boolean>(false);
 const currentSong = ref<Song | null>(null);
@@ -73,6 +74,9 @@ getCurrentSong();
             <div class="list-container">
                 <TopSongs />
             </div>
+            <div class="list-container">
+                <TopArtists />
+            </div>
         </div>
     </div>
 </template>
@@ -111,8 +115,6 @@ getCurrentSong();
 }
 
 .list-container {
-    width: 25%;
     display: flex;
-    justify-content: center;
 }
 </style>

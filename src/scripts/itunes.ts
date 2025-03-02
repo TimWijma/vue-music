@@ -1,8 +1,10 @@
 import { Fetch } from "./Fetch";
+import { FANART_API_KEY } from "./globals";
 
 export enum MediaType {
     Song = "song",
     Album = "album",
+    MusicArtist = "musicArtist",
 }
 
 export const getImage = async (artist: string, name: string, mediaType: MediaType) => {
@@ -18,4 +20,31 @@ export const getImage = async (artist: string, name: string, mediaType: MediaTyp
         });
 
     return image;
+};
+
+export const getArtistImage = async (artist: string) => {
+    let artistImage = "";
+
+    await Fetch.get(
+        `https://api.spotify.com/v1/search`,
+        {
+            type: "artist",
+            q: artist,
+            decorate_restrictions: false,
+            best_match: false,
+            include_external: "audio",
+            limit: 1,
+        },
+        true
+    )
+        .then((response) => {
+            console.log(response);
+
+            artistImage = response.artists.items[0].images[0].url;
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+    return artistImage;
 };
