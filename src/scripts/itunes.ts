@@ -1,5 +1,4 @@
 import { Fetch } from "./Fetch";
-import { FANART_API_KEY } from "./globals";
 
 export enum MediaType {
     Song = "song",

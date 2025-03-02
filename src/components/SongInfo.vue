@@ -20,11 +20,15 @@ onMounted(() => {
     titleMarquee = new Marquee(".song-title", ".song-info", props.currentSong.name);
     artistMarquee = new Marquee(".song-artist", ".song-info", props.currentSong.artist);
 
+    activateMarqueeTimeout();
+});
+
+const activateMarqueeTimeout = () => {
     setTimeout(() => {
         titleMarquee.startScroll();
         artistMarquee.startScroll();
     }, 1000);
-});
+};
 
 watch(
     () => props.currentSong,
@@ -56,6 +60,7 @@ watch(
                             reloaded = true;
                             titleMarquee.stopScroll();
                             artistMarquee.stopScroll();
+                            activateMarqueeTimeout();
                         }
                     "
                     class="material-symbols-outlined"
