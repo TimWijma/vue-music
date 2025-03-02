@@ -56,7 +56,7 @@ getTopAlbums();
 </script>
 
 <template>
-    <div class="top-records">
+    <div class="top-records transition">
         <h2>Top Albums</h2>
         <div class="records-container">
             <div v-for="album in albums" :key="album.rank">

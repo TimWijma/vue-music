@@ -7,7 +7,15 @@ const props = defineProps<{
     currentSong: Track;
 }>();
 
+const $emit = defineEmits();
+
 let reloaded = ref(false);
+
+const reload = () => {
+    reloaded.value = true;
+    document.documentElement.style.setProperty("--transition", "0.5s ease");
+    $emit("reload");
+};
 
 const openLink = () => {
     window.open(props.currentSong.url, "_blank");
@@ -15,7 +23,7 @@ const openLink = () => {
 </script>
 
 <template>
-    <div class="container" :class="{ transition: reloaded }">
+    <div class="container transition">
         <img :src="currentSong.image" class="song-cover" alt="Cover" />
 
         <div class="song-info">
@@ -35,17 +43,10 @@ const openLink = () => {
             </span>
 
             <div class="song-buttons">
-                <button
-                    @click="
-                        () => {
-                            $emit('reload');
-                            reloaded = true;
-                        }
-                    "
-                    class="material-symbols-outlined">
-                    sync
+                <button @click="reload" class="material-symbols-outlined transition">sync</button>
+                <button @click="openLink" class="material-symbols-outlined transition">
+                    open_in_new
                 </button>
-                <button @click="openLink" class="material-symbols-outlined">open_in_new</button>
             </div>
         </div>
     </div>

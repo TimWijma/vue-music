@@ -44,7 +44,7 @@ button {
 }
 
 .transition {
-    transition: 0.5s ease;
+    transition: var(--transition);
     transition-property: background-color, color;
 }
 

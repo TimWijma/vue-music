@@ -48,7 +48,7 @@ getTopArtists();
 </script>
 
 <template>
-    <div class="top-records">
+    <div class="top-records transition">
         <h2>Top Artists</h2>
         <div class="records-container">
             <div v-for="artist in artists" :key="artist.rank">

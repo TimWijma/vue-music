@@ -63,7 +63,7 @@ getCurrentSong();
 </script>
 
 <template>
-    <div class="app-container">
+    <div class="app-container transition">
         <div v-if="nowPlaying && currentSong" class="info-container">
             <div class="info">
                 <CurrentlyPlaying :currentSong @reload="getCurrentSong" />

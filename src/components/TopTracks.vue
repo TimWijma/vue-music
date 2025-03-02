@@ -56,7 +56,7 @@ getTopTracks();
 </script>
 
 <template>
-    <div class="top-records">
+    <div class="top-records transition">
         <h2>Top Tracks</h2>
         <div class="records-container">
             <div v-for="track in tracks" :key="track.rank">

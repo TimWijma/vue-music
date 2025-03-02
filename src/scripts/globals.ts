@@ -7,13 +7,9 @@ export const USERNAME = "Drag0nEye";
 export const getSpotifyToken = async () => {
     await Fetch.get("http://localhost:3000/api/spotifytoken")
         .then((response) => {
-            const { accessToken, accessTokenExpirationTimestampMs } = response;
+            const { accessToken } = response;
 
             SPOTIFY_TOKEN = accessToken;
-
-            setTimeout(() => {
-                getSpotifyToken();
-            }, accessTokenExpirationTimestampMs - Date.now());
         })
         .catch((error: any) => {
             console.log(error);
