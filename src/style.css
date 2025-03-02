@@ -16,11 +16,13 @@ body,
 
     width: 100%;
     height: 100%;
+
+    box-sizing: border-box;
 }
 
 button {
-    background-color: var(--vibrant-dark-bg);
-    color: var(--vibrant-dark-text);
+    background-color: var(--vibrant-bg);
+    color: var(--vibrant-text);
     border: none;
     text-align: center;
     padding: 8px;

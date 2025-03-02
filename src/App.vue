@@ -2,22 +2,23 @@
 import SongInfo from "./components/SongInfo.vue";
 
 import { ref } from "vue";
-import { Fetch } from "./scripts/fetch";
-import { Song } from "./scripts/song";
+import { Fetch } from "./scripts/Fetch";
+import { Song } from "./scripts/Song";
 import { calculateBackgroundColor, calculateTextColor } from "./scripts/colors";
-
-const apikey = import.meta.env.VITE_LASTFM_API_KEY;
-const user = "Drag0nEye";
+import { API_KEY, USERNAME } from "./scripts/globals";
+import TopSongs from "./components/TopTracks.vue";
 
 const nowPlaying = ref<boolean>(false);
 const currentSong = ref<Song | null>(null);
+
+console.log(encodeURIComponent("TUPPERWAVE" + " " + "Market Square 7-Eleven"));
 
 const getCurrentSong = async () => {
     await Fetch.get("http://ws.audioscrobbler.com/2.0", {
         method: "user.getrecenttracks",
         format: "json",
-        user: user,
-        api_key: apikey,
+        user: USERNAME,
+        api_key: API_KEY,
         limit: 1,
     })
         .then(async (response) => {
@@ -64,7 +65,14 @@ getCurrentSong();
 <template>
     <div class="app-container">
         <div v-if="nowPlaying && currentSong" class="info-container">
-            <SongInfo :currentSong @reload="getCurrentSong" />
+            <div class="info">
+                <SongInfo :currentSong @reload="getCurrentSong" />
+            </div>
+        </div>
+        <div class="list-containers">
+            <div class="list-container">
+                <TopSongs />
+            </div>
         </div>
     </div>
 </template>
@@ -75,16 +83,35 @@ getCurrentSong();
     height: 100%;
 
     color: var(--vibrant-text);
-    background-color: var(--vibrant-dark-bg);
+    background-color: var(--vibrant-bg);
+    overflow-y: auto;
+}
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+.info-container,
+.list-containers {
+    padding: 48px;
+    box-sizing: border-box;
 }
 
 .info-container {
     width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.info {
+    max-width: 65%;
+    min-width: 650px;
+}
+
+.list-containers {
+    display: flex;
+}
+
+.list-container {
+    width: 25%;
     display: flex;
     justify-content: center;
 }

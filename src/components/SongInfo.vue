@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
-import { Song } from "../scripts/song";
-import { Marquee } from "../scripts/marquee";
+import { Song } from "../scripts/Song";
+import { Marquee } from "../scripts/Marquee";
 
 const props = defineProps<{
     currentSong: Song;
@@ -17,14 +17,19 @@ const openLink = () => {
 };
 
 onMounted(() => {
-    titleMarquee = new Marquee(".song-title", ".song-info", props.currentSong.title);
+    titleMarquee = new Marquee(".song-title", ".song-info", props.currentSong.name);
     artistMarquee = new Marquee(".song-artist", ".song-info", props.currentSong.artist);
+
+    setTimeout(() => {
+        titleMarquee.startScroll();
+        artistMarquee.startScroll();
+    }, 1000);
 });
 
 watch(
     () => props.currentSong,
     () => {
-        titleMarquee.originalText = props.currentSong.title;
+        titleMarquee.originalText = props.currentSong.name;
         artistMarquee.originalText = props.currentSong.artist;
     }
 );
@@ -32,12 +37,12 @@ watch(
 
 <template>
     <div class="container" :class="{ transition: reloaded }">
-        <img :src="currentSong.cover" class="song-cover" alt="Cover" />
+        <img :src="currentSong.image" class="song-cover" alt="Cover" />
 
         <div class="song-info">
             <span class="song-alt">Currently playing</span>
             <span class="song-title" @mouseover="titleMarquee.startScroll">
-                {{ currentSong.title }}
+                {{ currentSong.name }}
             </span>
             <span class="song-artist" @mouseover="artistMarquee.startScroll">
                 {{ currentSong.artist }}
@@ -65,11 +70,11 @@ watch(
 
 <style scoped>
 .container {
-    width: 65%;
     display: flex;
     align-items: center;
     padding: 24px;
-    background-color: var(--vibrant-bg);
+    background-color: var(--vibrant-dark-bg);
+    color: var(--vibrant-dark-text);
     border-radius: 30px;
 }
 

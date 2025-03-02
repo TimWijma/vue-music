@@ -1,13 +1,13 @@
 export class Song {
-    title: string;
+    name: string;
     artist: string;
-    cover: string;
+    image: string;
     url: string;
 
-    constructor(title: string, artist: string, cover: string, url: string) {
-        this.title = title;
+    constructor(name: string, artist: string, image: string, url: string) {
+        this.name = name;
         this.artist = artist;
-        this.cover = cover;
+        this.image = image;
         this.url = url;
     }
 }
