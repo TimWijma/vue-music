@@ -1,14 +1,21 @@
-import { Vibrant } from "node-vibrant/browser";
+import { Fetch } from "./Fetch";
 
 export const calculateBackgroundColor = async (image: string) => {
-    const palette = await Vibrant.from(image).getPalette();
+    let vibrant = [255, 255, 255];
+    let darkVibrant = [255, 255, 255];
 
-    let vibrant = palette.Vibrant?.rgb || [255, 255, 255];
-    let darkVibrant = palette.DarkVibrant?.rgb || vibrant;
+    await Fetch.get("http://localhost:3000/api/vibrant", { image })
+        .then((response: { Vibrant: { rgb: number[] }; DarkVibrant: { rgb: number[] } }) => {
+            vibrant = response.Vibrant.rgb;
+            darkVibrant = response.DarkVibrant.rgb;
+        })
+        .catch((error) => {
+            console.error(error);
+        });
 
     return {
-        vibrant: [vibrant[0], vibrant[1], vibrant[2]],
-        darkVibrant: [darkVibrant[0], darkVibrant[1], darkVibrant[2]],
+        vibrant,
+        darkVibrant,
     };
 };
 
