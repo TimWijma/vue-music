@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { COLORS } from "../scripts/globals";
 import { Record } from "../scripts/Records";
 import MarqueeComponent from "./MarqueeComponent.vue";
+import SkeletonLoader from "./SkeletonLoader.vue";
 
 defineProps<{
     record: Record;
@@ -11,20 +13,27 @@ defineProps<{
     <div class="container">
         <span class="record-rank">{{ record.rank }}</span>
         <img v-if="record.image" :src="record.image" class="record-cover" alt="Cover" />
-        <span
-            v-else
-            style="
-                min-width: 75px;
-                height: 75px;
-                border-radius: 8px;
-                background-color: var(--vibrant-dark-bg);
-            "
-        ></span>
+        <span v-else style="min-width: 75px; height: 75px; border-radius: 8px">
+            <SkeletonLoader
+                width="75px"
+                height="75px"
+                :main-color="COLORS.vibrantBg"
+                :secondary-color="COLORS.vibrantDarkBg"
+            />
+        </span>
         <div class="record-info">
-            <span class="record-name">
+            <span class="record-name" v-if="record.name">
                 <MarqueeComponent :text="record.name">
                     {{ record.name }}
                 </MarqueeComponent>
+            </span>
+            <span v-else>
+                <SkeletonLoader
+                    width="200px"
+                    height="24px"
+                    :main-color="COLORS.vibrantBg"
+                    :secondary-color="COLORS.vibrantDarkBg"
+                />
             </span>
             <span v-if="record.artist" class="record-artist">{{ record.artist }}</span>
             <span class="record-playcount">{{ record.playcount }} plays</span>

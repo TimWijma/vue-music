@@ -1,5 +1,5 @@
 import { Fetch } from "./Fetch";
-import { getSpotifyToken } from "./globals";
+import { checkSpotifyToken, getSpotifyToken } from "./globals";
 
 export enum MediaType {
     Song,
@@ -88,9 +88,6 @@ const getImageSpotify = async (search: string, mediaType: MediaTypeSpotify) => {
         .catch(async (error) => {
             if (error.status === 401) {
                 console.log("Token expired. Fetching new token...");
-                getSpotifyToken();
-
-                image = await getImageSpotify(search, mediaType);
             }
         });
 

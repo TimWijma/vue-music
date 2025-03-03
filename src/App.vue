@@ -13,15 +13,9 @@ import TopAlbums from "./components/TopAlbums.vue";
             </div>
         </div>
         <div class="list-containers">
-            <div class="list-container">
-                <TopArtists />
-            </div>
-            <div class="list-container">
-                <TopSongs />
-            </div>
-            <div class="list-container">
-                <TopAlbums />
-            </div>
+            <TopArtists />
+            <TopSongs />
+            <TopAlbums />
         </div>
     </div>
 </template>
@@ -29,11 +23,10 @@ import TopAlbums from "./components/TopAlbums.vue";
 <style scoped>
 .app-container {
     width: 100%;
-    height: 100%;
+    min-height: 100%;
 
     color: var(--vibrant-text);
     background-color: var(--vibrant-bg);
-    overflow-y: auto;
 }
 
 .info-container,
@@ -44,7 +37,7 @@ import TopAlbums from "./components/TopAlbums.vue";
 
 .info-container {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -60,10 +53,5 @@ import TopAlbums from "./components/TopAlbums.vue";
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 48px;
     justify-content: center;
-}
-
-.list-container {
-    display: flex;
-    white-space: nowrap;
 }
 </style>

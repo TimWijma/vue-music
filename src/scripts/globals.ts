@@ -1,17 +1,38 @@
 import { Fetch } from "./Fetch";
 
 export const API_KEY = import.meta.env.VITE_LASTFM_API_KEY;
-export let SPOTIFY_TOKEN = import.meta.env.VITE_SPOTIFY_TOKEN;
 export const USERNAME = "Drag0nEye";
+
+export let spotifyToken = "";
+
+export const COLORS = {
+    vibrantText: "black",
+    vibrantDarkText: "black",
+    vibrantBg: "#f0f0f0",
+    vibrantDarkBg: "white",
+};
+
+export const checkSpotifyToken = async () => {
+    if (!spotifyToken) {
+        await getSpotifyToken();
+    } else if (Date.now() > Date.parse(localStorage.getItem("spotifyTokenExpiration") || "")) {
+        await getSpotifyToken();
+    }
+
+    return spotifyToken !== "";
+};
 
 export const getSpotifyToken = async () => {
     await Fetch.get("http://localhost:3000/api/spotifytoken")
         .then((response) => {
-            const { accessToken } = response;
+            const { accessToken, accessTokenExpirationTimestampMs } = response;
 
-            SPOTIFY_TOKEN = accessToken;
+            spotifyToken = accessToken;
+            localStorage.setItem("spotifyTokenExpiration", accessTokenExpirationTimestampMs);
         })
         .catch((error: any) => {
             console.log(error);
+
+            spotifyToken = "";
         });
 };

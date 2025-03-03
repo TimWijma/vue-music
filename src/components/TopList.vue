@@ -40,7 +40,9 @@ const updateRecords = (period: Period) => {
             <div class="period-selector" @blur="isOpen = false">
                 <div class="selected-option" @click="isOpen = !isOpen" :class="{ active: isOpen }">
                     <span>{{ periodLabels[currentPeriod] }}</span>
-                    <span class="arrow" :class="{ up: isOpen }">▼</span>
+                    <span class="material-symbols-outlined arrow" :class="{ up: isOpen }">
+                        expand_more
+                    </span>
                 </div>
                 <div class="options" v-show="isOpen">
                     <div
@@ -56,8 +58,9 @@ const updateRecords = (period: Period) => {
             </div>
         </div>
         <div class="records-container">
-            <div v-for="record in records" :key="record.rank">
-                <TopRecord :record="record" />
+            <div v-for="i in 5" :key="i">
+                <TopRecord :record="records[i - 1]" v-if="records[i - 1]" />
+                <TopRecord :record="new Record(i, '', '', '', 0)" v-else />
             </div>
         </div>
     </div>
@@ -65,7 +68,6 @@ const updateRecords = (period: Period) => {
 
 <style scoped>
 .top-records {
-    width: 100%;
     display: flex;
     align-items: start;
     flex-direction: column;
@@ -80,7 +82,7 @@ const updateRecords = (period: Period) => {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    margin: 16px 0 16px 28px;
+    padding: 16px 0 16px 28px;
 }
 
 .top-records-title h2 {
@@ -105,23 +107,18 @@ const updateRecords = (period: Period) => {
 }
 
 .selected-option {
-    padding: 0.5rem 1rem;
+    padding: 8px 16px;
     background-color: var(--vibrant-dark-bg);
-    border: 2px solid var(--vibrant-bg);
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     color: var(--color-primary);
 }
 
-.selected-option:hover {
-    background-color: var(--vibrant-bg);
-}
-
-.selected-option.active {
-    border-color: var(--color-primary);
+.selected-option span:first-child {
+    margin-right: 8px;
 }
 
 .arrow {
@@ -134,28 +131,27 @@ const updateRecords = (period: Period) => {
 }
 
 .options {
+    width: fit-content;
     position: absolute;
     top: calc(100% + 4px);
-    left: 0;
-    right: 0;
-    background-color: var(--vibrant-dark-bg);
-    border: 2px solid var(--vibrant-bg);
-    border-radius: 4px;
+    right: 8px;
+    padding: 8px;
+    background-color: var(--vibrant-bg);
+    color: var(--vibrant-text);
+    border-radius: 8px;
     z-index: 10;
 }
 
 .option {
-    padding: 0.5rem 1rem;
+    padding: 8px;
+    border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.2s ease;
-}
-
-.option:hover {
-    background-color: var(--vibrant-bg);
+    white-space: nowrap;
 }
 
 .option.selected {
     background-color: var(--vibrant-bg);
-    color: var(--color-primary);
+    color: var(--vibrant-texts);
 }
 </style>

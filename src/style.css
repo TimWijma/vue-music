@@ -5,6 +5,12 @@
     --vibrant-dark-bg: white;
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 html,
 body,
 #app {
@@ -41,6 +47,7 @@ button {
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 8px;
+    transition: 0.5s ease;
 }
 
 .transition {

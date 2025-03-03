@@ -1,4 +1,4 @@
-import { SPOTIFY_TOKEN } from "./globals";
+import { spotifyToken } from "./globals";
 
 /**
  * Fetch wrapper
@@ -22,7 +22,7 @@ export class Fetch {
         return fetch(apiUrl, {
             headers: token
                 ? {
-                      Authorization: "Bearer " + SPOTIFY_TOKEN,
+                      Authorization: "Bearer " + spotifyToken,
                   }
                 : {},
             method: "GET",
