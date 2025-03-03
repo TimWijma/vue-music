@@ -119,6 +119,7 @@ const updateRecords = (period: Period) => {
 
 .selected-option span:first-child {
     margin-right: 8px;
+    text-align: right;
 }
 
 .arrow {

@@ -6,12 +6,15 @@ import { calculateBackgroundColor, calculateTextColor } from "../scripts/colors"
 import { API_KEY, COLORS, getSpotifyToken, USERNAME } from "../scripts/globals";
 import { Track } from "../scripts/Records";
 
-let reloaded = ref(false);
+const isReloading = ref(false);
 
 const currentlyPlaying = ref(false);
 const currentSong = ref<Track | null>(null);
 
 const getCurrentSong = async () => {
+    isReloading.value = true;
+    let startTime = Date.now();
+
     await Fetch.get("http://ws.audioscrobbler.com/2.0", {
         method: "user.getrecenttracks",
         format: "json",
@@ -21,9 +24,7 @@ const getCurrentSong = async () => {
     })
         .then(async (response: { recenttracks: any }) => {
             let track = response.recenttracks.track[0];
-            if (track["@attr"] && track["@attr"].nowplaying === "true") {
-                currentlyPlaying.value = true;
-            }
+            currentlyPlaying.value = track["@attr"] && track["@attr"].nowplaying === "true";
 
             if (track) {
                 let name = track.name;
@@ -59,16 +60,17 @@ const getCurrentSong = async () => {
         .catch((error: any) => {
             console.log(error);
         });
+
+    // Ensure the reload animation always does a full rotation
+    let timeDiff = Date.now() - startTime;
+    let timeToWait = 1000 - (timeDiff % 1000);
+    setTimeout(() => {
+        isReloading.value = false;
+    }, timeToWait);
 };
 
 getSpotifyToken();
 getCurrentSong();
-
-const reload = () => {
-    reloaded.value = true;
-    document.documentElement.style.setProperty("--transition", "0.5s ease");
-    getCurrentSong();
-};
 
 const openLink = () => {
     if (currentSong.value) {
@@ -100,7 +102,9 @@ const openLink = () => {
             </span>
 
             <div class="song-buttons">
-                <button @click="reload" class="material-symbols-outlined transition">sync</button>
+                <button @click="getCurrentSong" class="material-symbols-outlined transition">
+                    <span :class="{ reload: isReloading }">sync</span>
+                </button>
                 <button @click="openLink" class="material-symbols-outlined transition">
                     open_in_new
                 </button>
@@ -157,5 +161,18 @@ const openLink = () => {
 
 .song-buttons {
     margin-top: 16px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+.reload {
+    animation: spin 1s infinite;
 }
 </style>
