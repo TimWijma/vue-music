@@ -62,35 +62,3 @@ h2 {
     font-size: 2rem;
     margin: 16px 0;
 }
-
-.top-records {
-    width: 100%;
-    display: flex;
-    align-items: start;
-    flex-direction: column;
-    padding: 24px;
-    background-color: var(--vibrant-dark-bg);
-    color: var(--vibrant-dark-text);
-    border-radius: 30px;
-    overflow: hidden;
-}
-
-.top-records-title {
-    margin-bottom: 16px;
-    margin-left: 28px;
-}
-
-.top-records-title h2 {
-    margin-bottom: 0;
-}
-
-.top-records-title span {
-    opacity: 0.35;
-    font-size: 1.2rem;
-}
-
-.records-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}

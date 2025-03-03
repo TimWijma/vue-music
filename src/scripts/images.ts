@@ -50,10 +50,11 @@ const getImageITunes = async (search: string, mediaType: MediaTypeITunes) => {
         mediaType,
     })
         .then((response) => {
+            if (response.results.length === 0) return;
             image = response.results[0].artworkUrl100;
         })
         .catch((error) => {
-            console.error(error);
+            console.error(search, error);
         });
 
     return image;

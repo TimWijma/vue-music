@@ -5,17 +5,18 @@ import { API_KEY, USERNAME } from "../scripts/globals";
 import { Track } from "../scripts/Records";
 import { getImage, MediaType } from "../scripts/images";
 import TopList from "./TopList.vue";
+import { Period } from "../scripts/Period.enum";
 
 const tracks = ref<Track[]>([]);
 
-const getTopTracks = async () => {
+const getTopTracks = async (period: Period = Period.Month) => {
     await Fetch.get("http://ws.audioscrobbler.com/2.0", {
         method: "user.gettoptracks",
         format: "json",
         user: USERNAME,
         api_key: API_KEY,
         limit: 5,
-        period: "1month",
+        period,
     })
         .then(async (response) => {
             let toptracks = response.toptracks.track;
@@ -56,5 +57,5 @@ getTopTracks();
 </script>
 
 <template>
-    <TopList title="Top Tracks" :records="tracks" />
+    <TopList title="Top Tracks" :records="tracks" @update-records="getTopTracks" />
 </template>

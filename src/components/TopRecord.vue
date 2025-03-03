@@ -10,7 +10,16 @@ defineProps<{
 <template>
     <div class="container">
         <span class="record-rank">{{ record.rank }}</span>
-        <img :src="record.image" class="record-cover" alt="Cover" />
+        <img v-if="record.image" :src="record.image" class="record-cover" alt="Cover" />
+        <span
+            v-else
+            style="
+                min-width: 75px;
+                height: 75px;
+                border-radius: 8px;
+                background-color: var(--vibrant-dark-bg);
+            "
+        ></span>
         <div class="record-info">
             <span class="record-name">
                 <MarqueeComponent :text="record.name">

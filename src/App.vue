@@ -14,10 +14,10 @@ import TopAlbums from "./components/TopAlbums.vue";
         </div>
         <div class="list-containers">
             <div class="list-container">
-                <TopSongs />
+                <TopArtists />
             </div>
             <div class="list-container">
-                <TopArtists />
+                <TopSongs />
             </div>
             <div class="list-container">
                 <TopAlbums />

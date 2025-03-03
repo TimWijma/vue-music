@@ -2,9 +2,26 @@ export class Marquee {
     element: HTMLElement | null;
     container: HTMLElement | null;
     isAnimating: boolean;
-    text: string;
     gap: string;
     originalContent: Node | undefined;
+
+    set text(value: string) {
+        this._text = value;
+        if (this.element) {
+            const textNode = document.createElement("span");
+            textNode.textContent = value;
+            this.originalContent = textNode;
+            if (!this.isAnimating) {
+                this.stopScroll();
+            }
+        }
+    }
+
+    get text(): string {
+        return this._text;
+    }
+
+    private _text: string;
 
     constructor(
         element: HTMLElement | null,
@@ -15,7 +32,7 @@ export class Marquee {
         this.element = element;
         this.container = container;
         this.isAnimating = false;
-        this.text = originalText;
+        this._text = originalText;
         this.gap = gapText;
         this.originalContent = element?.cloneNode(true);
     }
