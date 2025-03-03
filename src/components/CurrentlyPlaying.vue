@@ -3,7 +3,7 @@ import { ref } from "vue";
 import MarqueeComponent from "./MarqueeComponent.vue";
 import { Fetch } from "../scripts/Fetch";
 import { calculateBackgroundColor, calculateTextColor } from "../scripts/colors";
-import { API_KEY, COLORS, getSpotifyToken, USERNAME } from "../scripts/globals";
+import { API_KEY, getSpotifyToken, USERNAME } from "../scripts/globals";
 import { Track } from "../scripts/Records";
 import CurrentlyPlayingAnimation from "./CurrentlyPlayingAnimation.vue";
 
@@ -52,10 +52,6 @@ const getCurrentSong = async () => {
                     "--vibrant-dark-bg",
                     `rgb(${colors.darkVibrant})`
                 );
-                COLORS.vibrantText = calculateTextColor(colors.vibrant);
-                COLORS.vibrantDarkText = calculateTextColor(colors.darkVibrant);
-                COLORS.vibrantBg = `rgb(${colors.vibrant})`;
-                COLORS.vibrantDarkBg = `rgb(${colors.darkVibrant})`;
             }
         })
         .catch((error: any) => {

@@ -3,6 +3,7 @@
     --vibrant-dark-text: black;
     --vibrant-bg: #f0f0f0;
     --vibrant-dark-bg: white;
+    --transition: 0.5s ease;
 }
 
 * {

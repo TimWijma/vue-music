@@ -49,7 +49,11 @@ const updateRecords = (period: Period) => {
         <div class="top-records-title">
             <h2>{{ title }}</h2>
             <div class="period-selector" @blur="isOpen = false">
-                <div class="selected-option" @click="isOpen = !isOpen" :class="{ active: isOpen }">
+                <div
+                    class="selected-option transition"
+                    @click="isOpen = !isOpen"
+                    :class="{ active: isOpen }"
+                >
                     <span>{{ periodLabels[currentPeriod] }}</span>
                     <span class="material-symbols-outlined arrow" :class="{ up: isOpen }">
                         expand_more
@@ -71,7 +75,7 @@ const updateRecords = (period: Period) => {
         <div class="records-container">
             <div v-for="i in 5" :key="i">
                 <TopRecord :record="localRecords[i - 1]" v-if="localRecords[i - 1]" />
-                <TopRecord :record="new Record(i, '', '', '', 0)" v-else />
+                <TopRecord :record="new Record(0, '', '', '', 0)" v-else />
             </div>
         </div>
     </div>
@@ -125,7 +129,7 @@ const updateRecords = (period: Period) => {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    color: var(--color-primary);
+    color: var(--vibrant-dark-text);
 }
 
 .selected-option span:first-child {
@@ -158,7 +162,6 @@ const updateRecords = (period: Period) => {
     padding: 8px;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
     white-space: nowrap;
 }
 

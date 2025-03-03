@@ -1,17 +1,9 @@
-import { ref } from "vue";
 import { Fetch } from "./Fetch";
 
 export const API_KEY = import.meta.env.VITE_LASTFM_API_KEY;
 export const USERNAME = "Drag0nEye";
 
 export let spotifyToken = "";
-
-export const COLORS = ref({
-    vibrantText: "black",
-    vibrantDarkText: "black",
-    vibrantBg: "#f0f0f0",
-    vibrantDarkBg: "white",
-});
 
 export const checkSpotifyToken = async () => {
     if (!spotifyToken) {
