@@ -3,14 +3,10 @@ const props = withDefaults(
     defineProps<{
         width?: string;
         height?: string;
-        mainColor?: string;
-        secondaryColor?: string;
     }>(),
     {
         width: "100%",
         height: "20px",
-        mainColor: "#f0f0f0",
-        secondaryColor: "#e0e0e0",
     }
 );
 </script>
@@ -21,8 +17,6 @@ const props = withDefaults(
         :style="{
             width: props.width,
             height: props.height,
-            '--main-color': props.mainColor,
-            '--secondary-color': props.secondaryColor,
         }"
     ></div>
 </template>
@@ -31,9 +25,9 @@ const props = withDefaults(
 .skeleton-loader {
     background: linear-gradient(
         90deg,
-        var(--main-color),
-        var(--secondary-color),
-        var(--main-color)
+        var(--vibrant-bg),
+        var(--vibrant-dark-bg),
+        var(--vibrant-bg)
     );
     background-size: 200% 100%;
     border-radius: 4px;

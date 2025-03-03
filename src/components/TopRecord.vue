@@ -36,7 +36,17 @@ defineProps<{
                 />
             </span>
             <span v-if="record.artist" class="record-artist">{{ record.artist }}</span>
-            <span class="record-playcount">{{ record.playcount }} plays</span>
+            <span v-if="record.playcount" class="record-playcount">
+                {{ record.playcount }} plays
+            </span>
+            <span v-else style="margin-top: 4px">
+                <SkeletonLoader
+                    width="100px"
+                    height="16px"
+                    :main-color="COLORS.vibrantBg"
+                    :secondary-color="COLORS.vibrantDarkBg"
+                />
+            </span>
         </div>
     </div>
 </template>

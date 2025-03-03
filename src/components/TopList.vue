@@ -1,13 +1,22 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { Record } from "../scripts/Records";
 import TopRecord from "./TopRecord.vue";
 import { Period } from "../scripts/Period.enum";
 
-defineProps<{
+const props = defineProps<{
     title: string;
     records: Record[];
 }>();
+
+const localRecords = ref<Record[]>(props.records);
+
+watch(
+    () => props.records,
+    (newRecords) => {
+        localRecords.value = newRecords;
+    }
+);
 
 const emit = defineEmits<{
     (event: "updateRecords", period: Period): void;
@@ -28,6 +37,8 @@ const isOpen = ref(false);
 const updateRecords = (period: Period) => {
     currentPeriod.value = period;
     isOpen.value = false;
+
+    localRecords.value = [];
 
     emit("updateRecords", period);
 };
@@ -59,7 +70,7 @@ const updateRecords = (period: Period) => {
         </div>
         <div class="records-container">
             <div v-for="i in 5" :key="i">
-                <TopRecord :record="records[i - 1]" v-if="records[i - 1]" />
+                <TopRecord :record="localRecords[i - 1]" v-if="localRecords[i - 1]" />
                 <TopRecord :record="new Record(i, '', '', '', 0)" v-else />
             </div>
         </div>

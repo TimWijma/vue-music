@@ -5,6 +5,7 @@ import { Fetch } from "../scripts/Fetch";
 import { calculateBackgroundColor, calculateTextColor } from "../scripts/colors";
 import { API_KEY, COLORS, getSpotifyToken, USERNAME } from "../scripts/globals";
 import { Track } from "../scripts/Records";
+import CurrentlyPlayingAnimation from "./CurrentlyPlayingAnimation.vue";
 
 const isReloading = ref(false);
 
@@ -84,7 +85,12 @@ const openLink = () => {
         <img :src="currentSong.image" class="song-cover" alt="Cover" />
 
         <div class="song-info">
-            <span class="song-alt" v-if="currentlyPlaying">Currently playing</span>
+            <span class="song-alt" v-if="currentlyPlaying">
+                <span class="song-playinginfo">Currently playing</span>
+                <div class="song-playinganimation">
+                    <CurrentlyPlayingAnimation />
+                </div>
+            </span>
             <span class="song-alt" v-else>Last played</span>
             <span class="song-name">
                 <MarqueeComponent :text="currentSong.name" activate-on-load :key="currentSong.name">
@@ -135,14 +141,20 @@ const openLink = () => {
     margin-left: 16px;
 }
 
-.song-info span {
-    display: block;
-}
-
 .song-alt {
+    display: flex;
     opacity: 0.35;
     font-size: 1.5rem;
     font-weight: bold;
+}
+
+.song-alt .song-playinginfo {
+    margin-right: 8px;
+}
+
+.song-playinganimation {
+    margin-bottom: 4px;
+    opacity: 0.8;
 }
 
 .song-name,
@@ -173,6 +185,7 @@ const openLink = () => {
 }
 
 .reload {
+    display: inline-block;
     animation: spin 1s infinite;
 }
 </style>
