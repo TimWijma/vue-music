@@ -3,8 +3,8 @@ import { ref } from "vue";
 import { Fetch } from "../scripts/Fetch";
 import { API_KEY, USERNAME } from "../scripts/globals";
 import { getImage, MediaType } from "../scripts/images";
-import TopRecord from "./TopRecord.vue";
 import { Artist } from "../scripts/Records";
+import TopList from "./TopList.vue";
 
 const artists = ref<Artist[]>([]);
 
@@ -48,15 +48,5 @@ getTopArtists();
 </script>
 
 <template>
-    <div class="top-records transition">
-        <div class="top-records-title">
-            <h2>Top Artists</h2>
-            <span>Last 30 days</span>
-        </div>
-        <div class="records-container">
-            <div v-for="artist in artists" :key="artist.rank">
-                <TopRecord :record="artist" />
-            </div>
-        </div>
-    </div>
+    <TopList title="Top Artists" :records="artists" />
 </template>

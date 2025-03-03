@@ -4,7 +4,7 @@ import { Fetch } from "../scripts/Fetch";
 import { API_KEY, USERNAME } from "../scripts/globals";
 import { Track } from "../scripts/Records";
 import { getImage, MediaType } from "../scripts/images";
-import TopRecords from "./TopRecord.vue";
+import TopList from "./TopList.vue";
 
 const tracks = ref<Track[]>([]);
 
@@ -56,15 +56,5 @@ getTopTracks();
 </script>
 
 <template>
-    <div class="top-records transition">
-        <div class="top-records-title">
-            <h2>Top Tracks</h2>
-            <span>Last 30 days</span>
-        </div>
-        <div class="records-container">
-            <div v-for="track in tracks" :key="track.rank">
-                <TopRecords :record="track" />
-            </div>
-        </div>
-    </div>
+    <TopList title="Top Tracks" :records="tracks" />
 </template>
