@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 import MarqueeComponent from "./MarqueeComponent.vue";
 import { Fetch } from "../scripts/Fetch";
 import { calculateBackgroundColor, calculateTextColor } from "../scripts/colors";
 import { API_KEY, getSpotifyToken, USERNAME } from "../scripts/globals";
 import { Track } from "../scripts/Records";
 import CurrentlyPlayingAnimation from "./CurrentlyPlayingAnimation.vue";
+import SkeletonLoader from "./SkeletonLoader.vue";
 
 const isReloading = ref(false);
 const currentlyPlaying = ref(false);
 const currentSong = ref<Track | null>(null);
+
+const emit = defineEmits(["loaded"]);
 
 const getCurrentSong = async () => {
     isReloading.value = true;
@@ -33,6 +36,9 @@ const getCurrentSong = async () => {
                 let url = track.url;
 
                 currentSong.value = new Track(-1, name, artist, image, url, -1);
+
+                await nextTick();
+                emit("loaded");
 
                 let colors = await calculateBackgroundColor(image);
                 document.documentElement.style.setProperty(
@@ -76,23 +82,33 @@ const openLink = () => {
 </script>
 
 <template>
-    <div class="container transition" v-if="currentSong">
-        <img :src="currentSong.image" class="song-cover" alt="Cover" />
+    <div class="container transition song-container">
+        <img v-if="currentSong" :src="currentSong.image" class="song-cover" alt="Cover" />
+        <span v-else class="song-cover">
+            <SkeletonLoader width="100%" height="100%" />
+        </span>
 
         <div class="song-info">
-            <span class="song-alt" v-if="currentlyPlaying">
-                <span class="song-playinginfo">Currently playing</span>
-                <div class="song-playinganimation">
-                    <CurrentlyPlayingAnimation />
-                </div>
-            </span>
-            <span class="song-alt" v-else>Last played</span>
+            <div class="song-alt">
+                <span v-if="currentlyPlaying">
+                    <div class="song-playinginfo">Currently playing</div>
+                    <div class="song-playinganimation">
+                        <CurrentlyPlayingAnimation />
+                    </div>
+                </span>
+                <span v-else>Last played</span>
+            </div>
             <span class="song-name">
-                <MarqueeComponent :text="currentSong.name" activate-on-load :key="currentSong.name">
+                <MarqueeComponent
+                    v-if="currentSong"
+                    :text="currentSong.name"
+                    activate-on-load
+                    :key="currentSong.name">
                     {{ currentSong.name }}
                 </MarqueeComponent>
+                <SkeletonLoader v-else width="100%" height="40px" />
             </span>
-            <span class="song-artist" v-if="currentSong.artist">
+            <span class="song-artist" v-if="currentSong?.artist">
                 <MarqueeComponent
                     :text="currentSong.artist"
                     activate-on-load
@@ -126,7 +142,7 @@ const openLink = () => {
 
 .song-cover {
     width: 250px;
-    height: auto;
+    height: 250px;
 
     border-radius: 20px;
 }
@@ -137,8 +153,14 @@ const openLink = () => {
 }
 
 .song-alt {
-    display: flex;
     opacity: 0.35;
+}
+
+.song-alt span {
+    display: flex;
+    flex-direction: row;
+
+    width: 100%;
     font-size: 1.5rem;
     font-weight: bold;
 }

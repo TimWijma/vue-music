@@ -52,8 +52,7 @@ const updateRecords = (period: Period) => {
                 <div
                     class="selected-option transition"
                     @click="isOpen = !isOpen"
-                    :class="{ active: isOpen }"
-                >
+                    :class="{ active: isOpen }">
                     <span>{{ periodLabels[currentPeriod] }}</span>
                     <span class="material-symbols-outlined arrow" :class="{ up: isOpen }">
                         expand_more
@@ -65,8 +64,7 @@ const updateRecords = (period: Period) => {
                         :key="p"
                         class="option"
                         :class="{ selected: currentPeriod === p }"
-                        @click="updateRecords(p)"
-                    >
+                        @click="updateRecords(p)">
                         {{ periodLabels[p] }}
                     </div>
                 </div>
@@ -155,7 +153,7 @@ const updateRecords = (period: Period) => {
     background-color: var(--vibrant-bg);
     color: var(--vibrant-text);
     border-radius: 8px;
-    z-index: 10;
+    z-index: 2;
 }
 
 .option {

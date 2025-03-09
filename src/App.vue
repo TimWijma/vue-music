@@ -3,39 +3,84 @@ import CurrentlyPlaying from "./components/CurrentlyPlaying.vue";
 import TopSongs from "./components/TopTracks.vue";
 import TopArtists from "./components/TopArtists.vue";
 import TopAlbums from "./components/TopAlbums.vue";
-import { onMounted, ref } from "vue";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const containerRef = ref<HTMLElement | null>(null);
+const initializeScrollTrigger = () => {
+    console.log("Initializing ScrollTrigger");
 
-onMounted(() => {
-    if (!containerRef.value) return;
-
-    gsap.to(containerRef.value, {
-        width: "100vw",
-        top: "0px",
-        backgroundColor: "red",
-        borderRadius: "0px",
-        scrollTrigger: {
-            trigger: containerRef.value,
-            start: "top top",
-            end: "+=200",
-            scrub: true,
-            pin: true,
-            markers: true,
-        },
+    ScrollTrigger.getAll().forEach((trigger) => {
+        trigger.kill();
     });
-});
+
+    const trigger = {
+        trigger: ".info",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+    };
+
+    let tl = gsap.timeline({
+        scrollTrigger: trigger,
+    });
+
+    gsap.to(".info", {
+        top: "0px",
+        position: "fixed",
+        width: "100%",
+        maxWidth: "100%",
+        scrollTrigger: trigger,
+    });
+
+    gsap.to(".song-container", {
+        padding: "16px",
+        borderRadius: "0px",
+        scrollTrigger: trigger,
+    });
+
+    gsap.to(".song-info", {
+        marginLeft: "8px",
+        scrollTrigger: trigger,
+    });
+
+    gsap.to(".song-cover", {
+        width: "60px",
+        height: "60px",
+        borderRadius: "8px",
+        scrollTrigger: trigger,
+    });
+
+    tl.to(".song-buttons, .song-alt", {
+        opacity: 0,
+    }).set(
+        ".song-buttons, .song-alt",
+        {
+            display: "none",
+        },
+        "<0.2"
+    );
+
+    gsap.to(".song-name", {
+        fontSize: "1.5rem",
+        scrollTrigger: trigger,
+    });
+
+    gsap.to(".song-artist", {
+        fontSize: "1rem",
+        scrollTrigger: trigger,
+    });
+
+    ScrollTrigger.refresh();
+};
 </script>
 
 <template>
     <div class="app-container transition">
         <div class="info-container">
-            <div class="info" ref="containerRef">
-                <CurrentlyPlaying />
+            <div class="info">
+                <CurrentlyPlaying @loaded="initializeScrollTrigger()" />
             </div>
         </div>
         <div class="list-containers">
@@ -50,7 +95,6 @@ onMounted(() => {
 .app-container {
     width: 100%;
     min-height: 100%;
-
     color: var(--vibrant-text);
     background-color: var(--vibrant-bg);
 }
@@ -72,6 +116,7 @@ onMounted(() => {
 .info {
     max-width: 65%;
     min-width: 650px;
+    z-index: 10;
 }
 
 .list-containers {
