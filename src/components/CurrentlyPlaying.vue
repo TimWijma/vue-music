@@ -8,7 +8,6 @@ import { Track } from "../scripts/Records";
 import CurrentlyPlayingAnimation from "./CurrentlyPlayingAnimation.vue";
 
 const isReloading = ref(false);
-
 const currentlyPlaying = ref(false);
 const currentSong = ref<Track | null>(null);
 
@@ -97,8 +96,7 @@ const openLink = () => {
                 <MarqueeComponent
                     :text="currentSong.artist"
                     activate-on-load
-                    :key="currentSong.artist"
-                >
+                    :key="currentSong.artist">
                     {{ currentSong.artist }}
                 </MarqueeComponent>
             </span>
@@ -117,6 +115,7 @@ const openLink = () => {
 
 <style scoped>
 .container {
+    width: 100%;
     display: flex;
     align-items: center;
     padding: 24px;

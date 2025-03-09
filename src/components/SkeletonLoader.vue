@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { defineProps, withDefaults } from "vue";
+
 const props = withDefaults(
     defineProps<{
         width?: string;
@@ -13,12 +15,11 @@ const props = withDefaults(
 
 <template>
     <div
-        class="skeleton-loader"
+        class="skeleton-loader transition"
         :style="{
             width: props.width,
             height: props.height,
-        }"
-    ></div>
+        }"></div>
 </template>
 
 <style scoped>

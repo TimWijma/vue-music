@@ -3,12 +3,38 @@ import CurrentlyPlaying from "./components/CurrentlyPlaying.vue";
 import TopSongs from "./components/TopTracks.vue";
 import TopArtists from "./components/TopArtists.vue";
 import TopAlbums from "./components/TopAlbums.vue";
+import { onMounted, ref } from "vue";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const containerRef = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+    if (!containerRef.value) return;
+
+    gsap.to(containerRef.value, {
+        width: "100vw",
+        top: "0px",
+        backgroundColor: "red",
+        borderRadius: "0px",
+        scrollTrigger: {
+            trigger: containerRef.value,
+            start: "top top",
+            end: "+=200",
+            scrub: true,
+            pin: true,
+            markers: true,
+        },
+    });
+});
 </script>
 
 <template>
     <div class="app-container transition">
         <div class="info-container">
-            <div class="info">
+            <div class="info" ref="containerRef">
                 <CurrentlyPlaying />
             </div>
         </div>
