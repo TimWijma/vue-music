@@ -61,6 +61,8 @@ const getImageITunes = async (search: string, mediaType: MediaTypeITunes) => {
 };
 
 const getImageSpotify = async (search: string, mediaType: MediaTypeSpotify) => {
+    // Spotify api does not work anymore
+    return "";
     let image = "";
 
     await Fetch.get(
