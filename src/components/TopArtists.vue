@@ -2,7 +2,6 @@
 import { ref } from "vue";
 import { Fetch } from "../scripts/Fetch";
 import { API_KEY, USERNAME } from "../scripts/globals";
-import { getImage, MediaType } from "../scripts/images";
 import { Artist } from "../scripts/Records";
 import TopList from "./TopList.vue";
 import { Period } from "../scripts/Period.enum";

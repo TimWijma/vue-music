@@ -2,10 +2,10 @@
 import { ref } from "vue";
 import { Fetch } from "../scripts/Fetch";
 import { API_KEY, USERNAME } from "../scripts/globals";
-import { MediaType, getImages } from "../scripts/images";
 import { Album } from "../scripts/Records";
 import TopList from "./TopList.vue";
 import { Period } from "../scripts/Period.enum";
+import { getImages, MediaType } from "../scripts/images";
 
 const albums = ref<Album[]>([]);
 
@@ -33,20 +33,11 @@ const getTopAlbums = async (period = Period.Month) => {
                     )
             );
 
-            // topartists.forEach((album: any, index: number) => {
-            //     getImage(`${album.artist.name} ${album.name}`, MediaType.Album)
-            //         .then((image) => {
-            //             albums.value[index] = new Album(
-            //                 index + 1,
-            //                 album.name,
-            //                 album.artist.name,
-            //                 image,
-            //                 album.url,
-            //                 album.playcount
-            //             );
-            //         })
-            //         .catch((error) => console.log(error));
-            // });
+            await getImages(MediaType.Album, period).then((images) => {
+                albums.value.forEach((album) => {
+                    album.image = images[album.name] || "";
+                });
+            });
         })
         .catch((error) => {
             console.log(error);

@@ -80,7 +80,7 @@ getCurrentSong();
 
 const openLink = () => {
     if (currentSong.value) {
-        window.open(currentSong.value.url, "_blank");
+        window.open(`https://last.fm${currentSong.value.url}`, "_blank");
     }
 };
 </script>
