@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { Vibrant } from "node-vibrant/node";
+import { parse } from "node-html-parser";
 
 const app = express();
 app.use(cors());
@@ -40,6 +41,57 @@ app.get("/api/vibrant", async (req, res) => {
     const palette = await v.getPalette();
 
     res.send(palette);
+});
+
+app.get("/api/lastfm", async (req, res) => {
+    const { username, type = "artists", period = "ALL" } = req.query;
+
+    if (!username) {
+        res.status(400).send("Missing required query parameters");
+        return;
+    }
+
+    try {
+        const url = `https://www.last.fm/user/${username}/partial/${type}?${type}_date_preset=${period}`;
+
+        // Fetch the HTML page
+        const response = await fetch(url);
+        if (!response.ok) {
+            return res.status(response.status).send("Failed to fetch Last.fm page");
+        }
+
+        const html = await response.text();
+
+        // console.log(html);`
+
+        const root = parse(html);
+        const items = {};
+
+        if (type === "artists" || type === "albums") {
+            root.querySelectorAll(".grid-items-cover-image").forEach((entry) => {
+                const img = entry
+                    .querySelector(".grid-items-cover-image-image img")
+                    .getAttribute("src");
+                const title = entry.querySelector(".grid-items-item-main-text").textContent.trim();
+
+                items[title] = img;
+            });
+        } else if (type === "tracks") {
+            root.querySelectorAll(".chartlist-row").forEach((entry) => {
+                const img = entry.querySelector(".chartlist-image a img").getAttribute("src");
+                const title = entry.querySelector(".chartlist-name a").textContent.trim();
+
+                items[title] = img;
+            });
+        }
+
+        console.log(items);
+
+        res.send(items);
+    } catch (error) {
+        console.error("Error scraping Last.fm:", error);
+        res.status(500).send("Error scraping Last.fm page");
+    }
 });
 
 const port = 3000;
