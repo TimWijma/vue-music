@@ -115,7 +115,7 @@ app.get("/api/lastfm", async (req, res) => {
 
         root.querySelectorAll(queries.item).forEach((entry) => {
             const title = entry.querySelector(queries.title).textContent.trim();
-            const img = entry.querySelector(queries.image).getAttribute("src");
+            const img = entry.querySelector(queries.image)?.getAttribute("src");
             const artist = queries.artist
                 ? entry.querySelector(queries.artist)?.textContent.trim() || ""
                 : "";
