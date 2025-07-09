@@ -9,7 +9,7 @@ import { Period } from "../scripts/Period.enum";
 
 const artists = ref<Artist[]>([]);
 
-const getTopArtists = async (period: Period = Period.Month) => {
+const getTopArtists = async (period = Period.Month) => {
     await Fetch.get("http://ws.audioscrobbler.com/2.0", {
         method: "user.gettopartists",
         format: "json",
@@ -26,19 +26,19 @@ const getTopArtists = async (period: Period = Period.Month) => {
                     new Artist(index + 1, artist.name, "", artist.url, artist.playcount)
             );
 
-            topartists.forEach((artist: any, index: number) => {
-                getImage(artist.name, MediaType.Artist)
-                    .then((image) => {
-                        artists.value[index] = new Artist(
-                            index + 1,
-                            artist.name,
-                            image,
-                            artist.url,
-                            artist.playcount
-                        );
-                    })
-                    .catch((error) => console.log(error));
-            });
+            // topartists.forEach((artist: any, index: number) => {
+            //     getImage(artist.name, MediaType.Artist)
+            //         .then((image) => {
+            //             artists.value[index] = new Artist(
+            //                 index + 1,
+            //                 artist.name,
+            //                 image,
+            //                 artist.url,
+            //                 artist.playcount
+            //             );
+            //         })
+            //         .catch((error) => console.log(error));
+            // });
         })
         .catch((error) => {
             console.log(error);

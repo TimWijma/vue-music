@@ -2,14 +2,14 @@
 import { ref } from "vue";
 import { Fetch } from "../scripts/Fetch";
 import { API_KEY, USERNAME } from "../scripts/globals";
-import { MediaType, getImage } from "../scripts/images";
+import { MediaType, getImages } from "../scripts/images";
 import { Album } from "../scripts/Records";
 import TopList from "./TopList.vue";
 import { Period } from "../scripts/Period.enum";
 
 const albums = ref<Album[]>([]);
 
-const getTopAlbums = async (period: Period = Period.Month) => {
+const getTopAlbums = async (period = Period.Month) => {
     await Fetch.get("http://ws.audioscrobbler.com/2.0", {
         method: "user.gettopalbums",
         format: "json",
@@ -33,20 +33,20 @@ const getTopAlbums = async (period: Period = Period.Month) => {
                     )
             );
 
-            topartists.forEach((album: any, index: number) => {
-                getImage(`${album.artist.name} ${album.name}`, MediaType.Album)
-                    .then((image) => {
-                        albums.value[index] = new Album(
-                            index + 1,
-                            album.name,
-                            album.artist.name,
-                            image,
-                            album.url,
-                            album.playcount
-                        );
-                    })
-                    .catch((error) => console.log(error));
-            });
+            // topartists.forEach((album: any, index: number) => {
+            //     getImage(`${album.artist.name} ${album.name}`, MediaType.Album)
+            //         .then((image) => {
+            //             albums.value[index] = new Album(
+            //                 index + 1,
+            //                 album.name,
+            //                 album.artist.name,
+            //                 image,
+            //                 album.url,
+            //                 album.playcount
+            //             );
+            //         })
+            //         .catch((error) => console.log(error));
+            // });
         })
         .catch((error) => {
             console.log(error);

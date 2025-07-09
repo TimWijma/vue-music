@@ -1,5 +1,3 @@
-import { spotifyToken } from "./globals";
-
 /**
  * Fetch wrapper
  *
@@ -17,14 +15,9 @@ import { spotifyToken } from "./globals";
  * You can pass an already stringified JSON object or a JS object.
  */
 export class Fetch {
-    static async get(url: string, params: any = {}, token: boolean = false) {
+    static async get(url: string, params: any = {}) {
         let apiUrl = Fetch.createUrl(url, params);
         return fetch(apiUrl, {
-            headers: token
-                ? {
-                      Authorization: "Bearer " + spotifyToken,
-                  }
-                : {},
             method: "GET",
         }).then(Fetch.responseHandler);
     }

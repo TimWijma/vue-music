@@ -22,15 +22,6 @@ const emit = defineEmits<{
     (event: "updateRecords", period: Period): void;
 }>();
 
-const periodLabels = {
-    [Period.Week]: "Last week",
-    [Period.Month]: "Last month",
-    [Period.Quarter]: "Last 3 months",
-    [Period.Half]: "Last 6 months",
-    [Period.Year]: "Last year",
-    [Period.All]: "All time",
-};
-
 const currentPeriod = ref<Period>(Period.Month);
 const isOpen = ref(false);
 
@@ -52,8 +43,9 @@ const updateRecords = (period: Period) => {
                 <div
                     class="selected-option transition"
                     @click="isOpen = !isOpen"
-                    :class="{ active: isOpen }">
-                    <span>{{ periodLabels[currentPeriod] }}</span>
+                    :class="{ active: isOpen }"
+                >
+                    <span>{{ currentPeriod }}</span>
                     <span class="material-symbols-outlined arrow" :class="{ up: isOpen }">
                         expand_more
                     </span>
@@ -64,8 +56,9 @@ const updateRecords = (period: Period) => {
                         :key="p"
                         class="option"
                         :class="{ selected: currentPeriod === p }"
-                        @click="updateRecords(p)">
-                        {{ periodLabels[p] }}
+                        @click="updateRecords(p)"
+                    >
+                        {{ p }}
                     </div>
                 </div>
             </div>

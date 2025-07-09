@@ -3,7 +3,7 @@ import { nextTick, ref } from "vue";
 import MarqueeComponent from "./MarqueeComponent.vue";
 import { Fetch } from "../scripts/Fetch";
 import { calculateBackgroundColor, calculateTextColor } from "../scripts/colors";
-import { API_KEY, getSpotifyToken, USERNAME } from "../scripts/globals";
+import { USERNAME } from "../scripts/globals";
 import { Track } from "../scripts/Records";
 import CurrentlyPlayingAnimation from "./CurrentlyPlayingAnimation.vue";
 import SkeletonLoader from "./SkeletonLoader.vue";
@@ -76,7 +76,6 @@ const getCurrentSong = async () => {
     }, timeToWait);
 };
 
-getSpotifyToken();
 getCurrentSong();
 
 const openLink = () => {
