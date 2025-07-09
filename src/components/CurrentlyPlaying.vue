@@ -2,7 +2,7 @@
 import { nextTick, ref } from "vue";
 import MarqueeComponent from "./MarqueeComponent.vue";
 import { Fetch } from "../scripts/Fetch";
-import { calculateBackgroundColor, calculateTextColor } from "../scripts/colors";
+import { calculateTextColor } from "../scripts/colors";
 import { USERNAME } from "../scripts/globals";
 import { Track } from "../scripts/Records";
 import CurrentlyPlayingAnimation from "./CurrentlyPlayingAnimation.vue";
@@ -28,6 +28,7 @@ const getCurrentSong = async () => {
                 url: string;
                 img: string;
                 currentlyPlaying: boolean;
+                palette: { Vibrant: { rgb: number[] }; DarkVibrant: { rgb: number[] } };
             }) => {
                 currentlyPlaying.value = response.currentlyPlaying;
 
@@ -44,22 +45,21 @@ const getCurrentSong = async () => {
                     await nextTick();
                     emit("loaded");
 
-                    let colors = await calculateBackgroundColor(response.img);
                     document.documentElement.style.setProperty(
                         "--vibrant-text",
-                        calculateTextColor(colors.vibrant)
+                        calculateTextColor(response.palette.Vibrant.rgb)
                     );
                     document.documentElement.style.setProperty(
                         "--vibrant-dark-text",
-                        calculateTextColor(colors.darkVibrant)
+                        calculateTextColor(response.palette.DarkVibrant.rgb)
                     );
                     document.documentElement.style.setProperty(
                         "--vibrant-bg",
-                        `rgb(${colors.vibrant})`
+                        `rgb(${response.palette.Vibrant.rgb})`
                     );
                     document.documentElement.style.setProperty(
                         "--vibrant-dark-bg",
-                        `rgb(${colors.darkVibrant})`
+                        `rgb(${response.palette.DarkVibrant.rgb})`
                     );
                 }
             }

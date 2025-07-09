@@ -1,24 +1,3 @@
-import { Fetch } from "./Fetch";
-
-export const calculateBackgroundColor = async (image: string) => {
-    let vibrant = [255, 255, 255];
-    let darkVibrant = [255, 255, 255];
-
-    await Fetch.get("http://localhost:3000/api/vibrant", { image })
-        .then((response: { Vibrant: { rgb: number[] }; DarkVibrant: { rgb: number[] } }) => {
-            vibrant = response.Vibrant.rgb;
-            darkVibrant = response.DarkVibrant.rgb;
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-
-    return {
-        vibrant,
-        darkVibrant,
-    };
-};
-
 const calculateLuminance = (color: number[]) => {
     color = color.map((c) => (c /= 255));
 

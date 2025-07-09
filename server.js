@@ -6,20 +6,6 @@ import { parse } from "node-html-parser";
 const app = express();
 app.use(cors());
 
-app.get("/api/vibrant", async (req, res) => {
-    const { image } = req.query;
-
-    if (!image) {
-        res.status(400).send("Missing required query parameters");
-        return;
-    }
-
-    const v = new Vibrant(image);
-    const palette = await v.getPalette();
-
-    res.send(palette);
-});
-
 app.get("/api/lastfm/latest", async (req, res) => {
     const { username } = req.query;
 
@@ -52,7 +38,15 @@ app.get("/api/lastfm/latest", async (req, res) => {
         const currentlyPlaying = lastTrack.classList.contains("chartlist-row--now-scrobbling");
         const img = lastTrack.querySelector(".chartlist-image a img").getAttribute("src");
 
-        res.send({ title, artist, url: track_url, img, currentlyPlaying });
+        if (!img) {
+            res.status(400).send("Missing required query parameters");
+            return;
+        }
+
+        const v = new Vibrant(img);
+        const palette = await v.getPalette();
+
+        res.send({ title, artist, url: track_url, img, currentlyPlaying, palette });
     } catch (error) {
         console.error("Error scraping Last.fm:", error);
         res.status(500).send("Error scraping Last.fm page");
