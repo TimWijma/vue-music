@@ -6,28 +6,28 @@ import { parse } from "node-html-parser";
 const app = express();
 app.use(cors());
 
-app.get("/api/spotifytoken", async (_, res) => {
-    const url = "https://open.spotify.com/get_access_token";
-    const response = await fetch(url);
-    const data = await response.json();
+// app.get("/api/spotifytoken", async (_, res) => {
+//     const url = "https://open.spotify.com/get_access_token";
+//     const response = await fetch(url);
+//     const data = await response.json();
 
-    res.send(data);
-});
+//     res.send(data);
+// });
 
-app.get("/api/itunes", async (req, res) => {
-    const { search, mediaType = "song" } = req.query;
+// app.get("/api/itunes", async (req, res) => {
+//     const { search, mediaType = "song" } = req.query;
 
-    if (!search) {
-        res.status(400).send("Missing required query parameters");
-        return;
-    }
+//     if (!search) {
+//         res.status(400).send("Missing required query parameters");
+//         return;
+//     }
 
-    const url = `https://itunes.apple.com/search?term=${search}&entity=${mediaType}`;
-    const response = await fetch(url);
-    const data = await response.json();
+//     const url = `https://itunes.apple.com/search?term=${search}&entity=${mediaType}`;
+//     const response = await fetch(url);
+//     const data = await response.json();
 
-    res.send(data);
-});
+//     res.send(data);
+// });
 
 app.get("/api/vibrant", async (req, res) => {
     const { image } = req.query;
@@ -43,7 +43,7 @@ app.get("/api/vibrant", async (req, res) => {
     res.send(palette);
 });
 
-app.get("/api/lastfm/home", async (req, res) => {
+app.get("/api/lastfm/latest", async (req, res) => {
     const { username } = req.query;
 
     if (!username) {
@@ -68,10 +68,14 @@ app.get("/api/lastfm/home", async (req, res) => {
         const lastTrack = recentTracks.querySelector("tbody tr");
         if (!lastTrack) return res.status(404).send("No tracks found");
 
+        const title = lastTrack.querySelector(".chartlist-name a").textContent.trim();
+        const artist = lastTrack.querySelector(".chartlist-artist a").textContent.trim();
+        const track_url = lastTrack.querySelector(".chartlist-name a").getAttribute("href");
+
         const currentlyPlaying = lastTrack.classList.contains("chartlist-row--now-scrobbling");
         const img = lastTrack.querySelector(".chartlist-image a img").getAttribute("src");
 
-        res.send({ img, currentlyPlaying });
+        res.send({ title, artist, url: track_url, img, currentlyPlaying });
     } catch (error) {
         console.error("Error scraping Last.fm:", error);
         res.status(500).send("Error scraping Last.fm page");

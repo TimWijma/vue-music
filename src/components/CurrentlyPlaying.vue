@@ -18,47 +18,52 @@ const getCurrentSong = async () => {
     isReloading.value = true;
     let startTime = Date.now();
 
-    await Fetch.get("http://ws.audioscrobbler.com/2.0", {
-        method: "user.getrecenttracks",
-        format: "json",
-        user: USERNAME,
-        api_key: API_KEY,
-        limit: 1,
+    await Fetch.get("http://localhost:3000/api/lastfm/latest", {
+        username: USERNAME,
     })
-        .then(async (response: { recenttracks: any }) => {
-            let track = response.recenttracks.track[0];
-            currentlyPlaying.value = track["@attr"] && track["@attr"].nowplaying === "true";
+        .then(
+            async (response: {
+                title: string;
+                artist: string;
+                url: string;
+                img: string;
+                currentlyPlaying: boolean;
+            }) => {
+                currentlyPlaying.value = response.currentlyPlaying;
 
-            if (track) {
-                let name = track.name;
-                let artist = track.artist["#text"];
-                let image = track.image[3]["#text"];
-                let url = track.url;
+                if (response.title) {
+                    currentSong.value = new Track(
+                        -1,
+                        response.title,
+                        response.artist,
+                        response.img,
+                        response.url,
+                        -1
+                    );
 
-                currentSong.value = new Track(-1, name, artist, image, url, -1);
+                    await nextTick();
+                    emit("loaded");
 
-                await nextTick();
-                emit("loaded");
-
-                let colors = await calculateBackgroundColor(image);
-                document.documentElement.style.setProperty(
-                    "--vibrant-text",
-                    calculateTextColor(colors.vibrant)
-                );
-                document.documentElement.style.setProperty(
-                    "--vibrant-dark-text",
-                    calculateTextColor(colors.darkVibrant)
-                );
-                document.documentElement.style.setProperty(
-                    "--vibrant-bg",
-                    `rgb(${colors.vibrant})`
-                );
-                document.documentElement.style.setProperty(
-                    "--vibrant-dark-bg",
-                    `rgb(${colors.darkVibrant})`
-                );
+                    let colors = await calculateBackgroundColor(response.img);
+                    document.documentElement.style.setProperty(
+                        "--vibrant-text",
+                        calculateTextColor(colors.vibrant)
+                    );
+                    document.documentElement.style.setProperty(
+                        "--vibrant-dark-text",
+                        calculateTextColor(colors.darkVibrant)
+                    );
+                    document.documentElement.style.setProperty(
+                        "--vibrant-bg",
+                        `rgb(${colors.vibrant})`
+                    );
+                    document.documentElement.style.setProperty(
+                        "--vibrant-dark-bg",
+                        `rgb(${colors.darkVibrant})`
+                    );
+                }
             }
-        })
+        )
         .catch((error: any) => {
             console.log(error);
         });
@@ -103,7 +108,8 @@ const openLink = () => {
                     v-if="currentSong"
                     :text="currentSong.name"
                     activate-on-load
-                    :key="currentSong.name">
+                    :key="currentSong.name"
+                >
                     {{ currentSong.name }}
                 </MarqueeComponent>
                 <SkeletonLoader v-else width="100%" height="40px" />
@@ -112,7 +118,8 @@ const openLink = () => {
                 <MarqueeComponent
                     :text="currentSong.artist"
                     activate-on-load
-                    :key="currentSong.artist">
+                    :key="currentSong.artist"
+                >
                     {{ currentSong.artist }}
                 </MarqueeComponent>
             </span>
