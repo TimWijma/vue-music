@@ -43,6 +43,41 @@ app.get("/api/vibrant", async (req, res) => {
     res.send(palette);
 });
 
+app.get("/api/lastfm/home", async (req, res) => {
+    const { username } = req.query;
+
+    if (!username) {
+        res.status(400).send("Missing required query parameters");
+        return;
+    }
+
+    try {
+        const url = `https://www.last.fm/user/${username}`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            return res.status(response.status).send("Failed to fetch Last.fm page");
+        }
+
+        const html = await response.text();
+
+        const root = parse(html);
+        const recentTracks = root.querySelector(".chartlist");
+        if (!recentTracks) return res.status(404).send("No recent tracks found");
+
+        const lastTrack = recentTracks.querySelector("tbody tr");
+        if (!lastTrack) return res.status(404).send("No tracks found");
+
+        const currentlyPlaying = lastTrack.classList.contains("chartlist-row--now-scrobbling");
+        const img = lastTrack.querySelector(".chartlist-image a img").getAttribute("src");
+
+        res.send({ img, currentlyPlaying });
+    } catch (error) {
+        console.error("Error scraping Last.fm:", error);
+        res.status(500).send("Error scraping Last.fm page");
+    }
+});
+
 app.get("/api/lastfm", async (req, res) => {
     const { username, type = "artists", period = "ALL" } = req.query;
 
